@@ -10,9 +10,64 @@
       <name>Radar Graph</name>
       <filters>
         <filter>
-          <name>My Demo Filter</name>
-          <class_id>my_filter.filter.demo</class_id>
+          <name>ADTFDAT Player</name>
+          <class_id>adtfdat_file_player.streaming_source.adtf.cid</class_id>
           <input_pins/>
+          <output_pins>
+            <pin>
+              <name>radar_data_udp</name>
+            </pin>
+            <pin>
+              <name>egomotion</name>
+            </pin>
+          </output_pins>
+          <runners/>
+          <init_priority>0</init_priority>
+          <deactivated>false</deactivated>
+          <binding_servers/>
+          <binding_clients/>
+        </filter>
+        <filter>
+          <name>UDP SOMEIP Parser Filter</name>
+          <class_id>packetparser.filter.radar.adtf</class_id>
+          <input_pins>
+            <pin>
+              <name>raw_udp_frame1</name>
+            </pin>
+            <pin>
+              <name>raw_udp_frame2</name>
+            </pin>
+          </input_pins>
+          <output_pins/>
+          <runners/>
+          <init_priority>0</init_priority>
+          <deactivated>false</deactivated>
+          <binding_servers/>
+          <binding_clients/>
+        </filter>
+        <filter>
+          <name>IPC UDP Receiver</name>
+          <class_id>udp_receiver.streaming_source.adtf.cid</class_id>
+          <input_pins/>
+          <output_pins/>
+          <runners>
+            <runner>
+              <name>receive_data</name>
+            </runner>
+          </runners>
+          <init_priority>0</init_priority>
+          <deactivated>false</deactivated>
+          <binding_servers/>
+          <binding_clients/>
+        </filter>
+        <filter>
+          <name>Qt5 Stream Display</name>
+          <class_id>stream_display.ui_filter.adtf.cid</class_id>
+          <input_pins>
+            <pin>
+              <name>radar_data_udp</name>
+            </pin>
+          </input_pins>
           <output_pins/>
           <runners/>
           <init_priority>0</init_priority>
@@ -30,10 +85,118 @@
       <input_runner_ports/>
       <streaming_in_ports/>
       <streaming_out_ports/>
-      <sample_streams/>
+      <sample_streams>
+        <sample_stream>
+          <name>ADTFDAT Player.video</name>
+          <class_id>sample_stream.streaming.adtf.cid</class_id>
+          <deactivated>false</deactivated>
+        </sample_stream>
+        <sample_stream>
+          <name>ADTFDAT Player.egomotion</name>
+          <class_id>sample_stream.streaming.adtf.cid</class_id>
+          <deactivated>false</deactivated>
+        </sample_stream>
+      </sample_streams>
       <active_runners/>
       <binding_proxys/>
-      <connections/>
+      <connections>
+        <connection>
+          <name>ADTFDAT Player.radar_data_udp_ADTFDAT Player.video.</name>
+          <source_connector_path>
+            <connector>radar_data_udp</connector>
+            <component>ADTFDAT Player</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.video</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>ADTFDAT Player.video._UDP SOMEIP Parser Filter.raw_udp_frame1</name>
+          <source_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.video</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>raw_udp_frame1</connector>
+            <component>UDP SOMEIP Parser Filter</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>ADTFDAT Player.egomotion_ADTFDAT Player.egomotion.</name>
+          <source_connector_path>
+            <connector>egomotion</connector>
+            <component>ADTFDAT Player</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.egomotion</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>ADTFDAT Player.egomotion._UDP SOMEIP Parser Filter.raw_udp_frame2</name>
+          <source_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.egomotion</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>raw_udp_frame2</connector>
+            <component>UDP SOMEIP Parser Filter</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>ADTFDAT Player.video._IPC UDP Receiver.receive_data</name>
+          <source_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.video</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>receive_data</connector>
+            <component>IPC UDP Receiver</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>ADTFDAT Player.video._Qt5 Stream Display.radar_data_udp</name>
+          <source_connector_path>
+            <connector/>
+            <component>ADTFDAT Player.video</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>radar_data_udp</connector>
+            <component>Qt5 Stream Display</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+      </connections>
       <streaming_interface_in_ports/>
       <streaming_interface_out_ports/>
     </graph>

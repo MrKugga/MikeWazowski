@@ -16,6 +16,26 @@
           <name>services/Kernel Service</name>
           <properties/>
         </property_set>
+        <property_set>
+          <name>services/Playback Service</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>services/Qt5 ADTF XSystem UI Service</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>services/Qt5 Log View UI Service</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>services/Qt5 Sample Stream Trace View UI Service</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>services/Demo Qt5 Player Control View</name>
+          <properties/>
+        </property_set>
       </property_sets>
     </property_package>
   </property_packages>

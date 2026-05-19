@@ -13,7 +13,88 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/Radar Graph/filters/My Demo Filter</name>
+          <name>graphs/Radar Graph/filters/ADTFDAT Player</name>
+          <properties>
+            <property>
+              <name>filenames</name>
+              <value>/home/adas-ee5/AudiProjects/Training_material/AdditionalFiles/example_desc.adtfdat</value>
+              <type>cFilenameList</type>
+              <link/>
+            </property>
+            <property>
+              <name>ignore_missing_streams</name>
+              <value>true</value>
+              <type>tBool</type>
+              <link/>
+            </property>
+          </properties>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter/input_pins/raw_udp_frame1</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter/input_pins/raw_udp_frame2</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/sample_streams/ADTFDAT Player.video</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/ADTFDAT Player/output_pins/radar_data_udp</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.radar_data_udp_ADTFDAT Player.video.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/ADTFDAT Player/output_pins/egomotion</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._UDP SOMEIP Parser Filter.raw_udp_frame1</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/sample_streams/ADTFDAT Player.egomotion</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.egomotion_ADTFDAT Player.egomotion.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.egomotion._UDP SOMEIP Parser Filter.raw_udp_frame2</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/IPC UDP Receiver</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._IPC UDP Receiver.receive_data</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/IPC UDP Receiver/runners/receive_data</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/Qt5 Stream Display</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/filters/Qt5 Stream Display/input_pins/radar_data_udp</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._Qt5 Stream Display.radar_data_udp</name>
           <properties/>
         </property_set>
       </property_sets>

@@ -26,7 +26,74 @@
     </platform>
     <platform>
       <name>linux_x86_64_release</name>
-      <libraries/>
+      <libraries>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Core.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5DBus.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Gui.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Xml.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Widgets.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Svg.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Network.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Multimedia.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5SerialPort.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5SerialBus.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_CONFIGURATION_EDITOR_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5OpenGL.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Core.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5DBus.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Gui.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Xml.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Widgets.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Svg.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Network.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5Multimedia.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5SerialPort.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5SerialBus.so</url>
+        </library>
+        <library>
+          <url>$(ADTF_DIR)/$(ADTF_QT5_DIR)/3rdparty/qt5/lib/libQt5OpenGL.so</url>
+        </library>
+      </libraries>
     </platform>
     <platform>
       <name>linux_x86_64_debug</name>
@@ -58,6 +125,54 @@
     <plugin>
       <url>$(ADTF_DIR)/bin/hello_world_filter.adtfplugin</url>
     </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/adtf_playback.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/adtf_playback_input.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/default_core_objects.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/demo_interface_source.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_xsystem.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_stream_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_ui_demo_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/demo_qt_media_description_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/adtf_ipc_udp.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/packet_parser_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/demo_time_triggered_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/demo_md_dumper_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_log_view.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_sample_stream_trace_view_ui.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/demo_player_control_view.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/demo_qt_video_display.adtfplugin</url>
+    </plugin>
   </plugins>
   <debug_plugins>
     <plugin>
@@ -72,6 +187,54 @@
     <plugin>
       <url>$(ADTF_DIR)/bin/hello_world_filter.adtfplugin</url>
     </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/adtf_playback.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/adtf_playback_input.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/default_core_objects.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/demo_interface_source.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_xsystem.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_stream_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_ui_demo_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/demo_qt_media_description_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/adtf_ipc_udp.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/packet_parser_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/demo_time_triggered_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/demo_md_dumper_filter.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_log_view.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_sample_stream_trace_view_ui.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/demo_player_control_view.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/demo_qt_video_display.adtfplugin</url>
+    </plugin>
   </debug_plugins>
   <services>
     <service>
@@ -83,6 +246,31 @@
       <classid>kernel.service.adtf.cid</classid>
       <objectid>Kernel Service</objectid>
       <runlevel>system</runlevel>
+    </service>
+    <service>
+      <classid>playback.service.adtf.cid</classid>
+      <objectid>Playback Service</objectid>
+      <runlevel>system</runlevel>
+    </service>
+    <service>
+      <classid>qt_xsystem.ui_service.adtf.cid</classid>
+      <objectid>Qt5 ADTF XSystem UI Service</objectid>
+      <runlevel>system</runlevel>
+    </service>
+    <service>
+      <classid>log_view.ui_service.adtf.cid</classid>
+      <objectid>Qt5 Log View UI Service</objectid>
+      <runlevel>system</runlevel>
+    </service>
+    <service>
+      <classid>sample_stream_trace_view.ui_service.adtf.cid</classid>
+      <objectid>Qt5 Sample Stream Trace View UI Service</objectid>
+      <runlevel>filtergraph</runlevel>
+    </service>
+    <service>
+      <classid>demo_qt_player_control_view.ui_service.adtf.cid</classid>
+      <objectid>Demo Qt5 Player Control View</objectid>
+      <runlevel>filtergraph</runlevel>
     </service>
   </services>
   <adtf_file_plugins/>
