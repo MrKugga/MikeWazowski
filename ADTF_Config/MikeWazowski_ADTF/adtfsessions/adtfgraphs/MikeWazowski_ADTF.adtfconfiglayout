@@ -47,25 +47,6 @@
           </connection_layout>
         </layout_set>
         <layout_set>
-          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter</name>
-          <boundary>
-            <x>593</x>
-            <y>312</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
           <name>graphs/Radar Graph/sample_streams/ADTFDAT Player.video</name>
           <boundary>
             <x>370</x>
@@ -86,25 +67,6 @@
         </layout_set>
         <layout_set>
           <name>graphs/Radar Graph/connections/ADTFDAT Player.radar_data_udp_ADTFDAT Player.video.</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._UDP SOMEIP Parser Filter.raw_udp_frame1</name>
           <boundary>
             <x>0</x>
             <y>0</y>
@@ -161,105 +123,10 @@
           </connection_layout>
         </layout_set>
         <layout_set>
-          <name>graphs/Radar Graph/connections/ADTFDAT Player.egomotion._UDP SOMEIP Parser Filter.raw_udp_frame2</name>
+          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter</name>
           <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/filters/IPC UDP Receiver</name>
-          <boundary>
-            <x>325</x>
-            <y>581</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._IPC UDP Receiver.receive_data</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/filters/IPC UDP Receiver/runners/receive_data</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/filters/Qt5 Stream Display</name>
-          <boundary>
-            <x>593</x>
-            <y>20</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/Radar Graph/connections/ADTFDAT Player.video._Qt5 Stream Display.radar_data_udp</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
+            <x>209</x>
+            <y>517</y>
             <width>0</width>
             <height>0</height>
           </boundary>
