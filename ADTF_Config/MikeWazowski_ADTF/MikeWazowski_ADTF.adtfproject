@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<project xmlns="adtf/xsd/project">
+  <file_version>
+    <major>1</major>
+    <minor>0</minor>
+  </file_version>
+  <name/>
+  <session_files>
+    <project_file>
+      <url>./adtfsessions/MikeWazowski_ADTF.adtfsession</url>
+      <properties_url/>
+      <property_set/>
+      <name>MikeWazowski_ADTF</name>
+    </project_file>
+  </session_files>
+  <graph_files>
+    <project_file>
+      <url>./adtfsessions/adtfgraphs/MikeWazowski_ADTF.adtfgraph</url>
+      <properties_url/>
+      <property_set/>
+      <name>MikeWazowski_ADTF</name>
+    </project_file>
+  </graph_files>
+  <system_files>
+    <project_file>
+      <url>./adtfsessions/adtfsystems/MikeWazowski_ADTF.adtfsystem</url>
+      <properties_url/>
+      <property_set/>
+      <name>MikeWazowski_ADTF</name>
+    </project_file>
+  </system_files>
+</project>
