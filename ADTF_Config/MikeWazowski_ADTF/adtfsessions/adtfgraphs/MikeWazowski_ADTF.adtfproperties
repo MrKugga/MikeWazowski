@@ -53,17 +53,6 @@
           <name>graphs/Radar Graph/connections/ADTFDAT Player.egomotion_ADTFDAT Player.egomotion.</name>
           <properties/>
         </property_set>
-        <property_set>
-          <name>graphs/Radar Graph/filters/UDP SOMEIP Parser Filter</name>
-          <properties>
-            <property>
-              <name>log_channels/default/log_level</name>
-              <value>255</value>
-              <type>tUInt8</type>
-              <link/>
-            </property>
-          </properties>
-        </property_set>
       </property_sets>
     </property_package>
   </property_packages>

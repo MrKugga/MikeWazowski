@@ -27,17 +27,6 @@
           <binding_servers/>
           <binding_clients/>
         </filter>
-        <filter>
-          <name>UDP SOMEIP Parser Filter</name>
-          <class_id>packetparser.filter.radar.adtf</class_id>
-          <input_pins/>
-          <output_pins/>
-          <runners/>
-          <init_priority>0</init_priority>
-          <deactivated>false</deactivated>
-          <binding_servers/>
-          <binding_clients/>
-        </filter>
       </filters>
       <subgraphs/>
       <input_data_ports/>
