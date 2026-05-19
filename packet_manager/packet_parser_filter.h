@@ -11,14 +11,15 @@ class cPacketParserFilter : public cFilter
 public:
     ADTF_CLASS_ID_NAME(cPacketParserFilter,
         "packetparser.filter.radar.adtf",
-        "UDP/SOMEIP Parser Filter");
+        "UDP SOMEIP Parser Filter");
 
     cPacketParserFilter();
 
-    tResult ProcessInput(ISampleReader* pReader,
-        const iobject_ptr<const ISample>& pSample) override;
+    tResult ProcessInput(adtf::streaming::ISampleReader* pReader,
+        const   adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample) override;
 
 private:
-    ISampleReader* m_pRawReader  = nullptr;
+    ISampleReader* m_pRawReader1 = nullptr;
+    ISampleReader* m_pRawReader2 = nullptr;
     ISampleWriter* m_pPayloadWriter = nullptr;
 };
