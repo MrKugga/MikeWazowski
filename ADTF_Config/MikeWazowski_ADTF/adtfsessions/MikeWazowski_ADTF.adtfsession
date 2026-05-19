@@ -18,6 +18,6 @@
     <name>MikeWazowski_ADTF</name>
   </adtfgraph>
   <active_streaming_graph/>
-  <active_filter_graph/>
+  <active_filter_graph>Radar Graph</active_filter_graph>
   <includes/>
 </session>

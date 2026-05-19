@@ -45,9 +45,46 @@
       <libraries/>
     </platform>
   </dependencies>
-  <plugins/>
-  <debug_plugins/>
-  <services/>
+  <plugins>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/adtf_clock.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/adtf_kernel.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/demo_rpc_calculator.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/hello_world_filter.adtfplugin</url>
+    </plugin>
+  </plugins>
+  <debug_plugins>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/adtf_clock.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/adtf_kernel.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/debug/demo_rpc_calculator.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/hello_world_filter.adtfplugin</url>
+    </plugin>
+  </debug_plugins>
+  <services>
+    <service>
+      <classid>reference_clock.service.adtf.cid</classid>
+      <objectid>Reference Clock Service</objectid>
+      <runlevel>system</runlevel>
+    </service>
+    <service>
+      <classid>kernel.service.adtf.cid</classid>
+      <objectid>Kernel Service</objectid>
+      <runlevel>system</runlevel>
+    </service>
+  </services>
   <adtf_file_plugins/>
   <debug_adtf_file_plugins/>
 </system>

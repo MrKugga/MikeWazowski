@@ -7,7 +7,16 @@
   <property_packages>
     <property_package>
       <name>default</name>
-      <property_sets/>
+      <property_sets>
+        <property_set>
+          <name>services/Reference Clock Service</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>services/Kernel Service</name>
+          <properties/>
+        </property_set>
+      </property_sets>
     </property_package>
   </property_packages>
 </property_file>

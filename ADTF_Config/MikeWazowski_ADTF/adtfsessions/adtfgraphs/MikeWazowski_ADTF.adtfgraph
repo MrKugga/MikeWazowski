@@ -5,6 +5,38 @@
     <minor>0</minor>
   </file_version>
   <name/>
-  <graphs/>
+  <graphs>
+    <graph>
+      <name>Radar Graph</name>
+      <filters>
+        <filter>
+          <name>My Demo Filter</name>
+          <class_id>my_filter.filter.demo</class_id>
+          <input_pins/>
+          <output_pins/>
+          <runners/>
+          <init_priority>0</init_priority>
+          <deactivated>false</deactivated>
+          <binding_servers/>
+          <binding_clients/>
+        </filter>
+      </filters>
+      <subgraphs/>
+      <input_data_ports/>
+      <output_data_ports/>
+      <input_interface_ports/>
+      <output_interface_ports/>
+      <output_runner_ports/>
+      <input_runner_ports/>
+      <streaming_in_ports/>
+      <streaming_out_ports/>
+      <sample_streams/>
+      <active_runners/>
+      <binding_proxys/>
+      <connections/>
+      <streaming_interface_in_ports/>
+      <streaming_interface_out_ports/>
+    </graph>
+  </graphs>
   <streaming_graphs/>
 </graph_file>
