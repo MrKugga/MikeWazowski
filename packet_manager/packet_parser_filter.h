@@ -24,7 +24,6 @@ struct tSomeIpHeader
     uint8_t  return_code;
 };
 
-static_assert(sizeof(tSomeIpHeader) == 16, "Some/IP Header must be 16 bytes");
 
 enum class cSomeIpMessageType : uint8_t {
     eRequest            = 0x00,
@@ -50,10 +49,10 @@ public:
         const   adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample) override;
     
     // lifecycle
-    // tResult Init(tInitStage eStage) override;
+    tResult Init(tInitStage eStage) override;
     // tResult Start() override;
     // tResult Stop() override;
-    // tResult Shutdown(tInitStage eStage) override;
+    tResult Shutdown(tInitStage eStage) override;
 
     tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pSample);
 

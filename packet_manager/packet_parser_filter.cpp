@@ -8,7 +8,7 @@ cPacketParserFilter::cPacketParserFilter()
     SetDescription("Radar Packed Decoder");
 
     m_pReader = CreateInputPin("Raw UDP Input");
-    m_pWriter = CreateOutputPin("SOME/IP Output");
+    m_pWriter = CreateOutputPin<adtf::filter::pin_writer<uint32_t>>("SOME/IP Output", stream_type_plain<uint32_t>());
 
     RegisterPropertyVariable("expected_service_id", m_nExpectedServiceId);
     RegisterPropertyVariable("expected_method_id",  m_nExpectedMethodId);
@@ -19,19 +19,28 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
     const adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample)
 {
 
-    LOG_INFO("Processing data...");
-    
-    adtf::ucom::object_ptr<const adtf::streaming::ISample> pReadSample;
-    
-    while(IS_OK(m_pReader->GetNextSample(pReadSample))) {
-        LOG_INFO("Okay");
-        RETURN_IF_FAILED(ProcessSample(pReadSample));
+    if(pSample.Get()) {
+
+        LOG_INFO("Processing samples");
+        m_pWriter->Write(pSample);
+
+    } else {
+        LOG_ERROR("ERROR!");
+        RETURN_ERROR(ERR_INVALID_ADDRESS);
     }
 
     RETURN_NOERROR;
 }
 
-tResult cPacketParserFilter::ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pSample) {
-    LOG_INFO("I'm processing something");
+tResult cPacketParserFilter::Init(tInitStage eStage) {
+
+    LOG_INFO("Initialising UDP Decoder");
+    RETURN_NOERROR;
+}
+
+
+tResult cPacketParserFilter::Shutdown(tInitStage eStage) {
+
+    LOG_INFO("Shutting down UDP Decoder");
     RETURN_NOERROR;
 }
