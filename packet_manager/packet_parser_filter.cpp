@@ -222,7 +222,8 @@ tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage) {
         case RadarTypes::MESSAGEID_OBJECTS_0: {
             const tObject0_Packet* oDecodedMessage = reinterpret_cast<const tObject0_Packet*>(oMessage);
             const int16_t nObjX = oDecodedMessage->sObject0_msg.aObj.sObj[0].fDistX;
-            LOG_INFO("Object x: %d", nObjX);
+            const int16_t nObjY = oDecodedMessage->sObject0_msg.aObj.sObj[0].fDistY;
+            LOG_INFO("Object position: (%f, %f)", (double)nObjX*RadarTypes::RES_F_DISTX, (double)nObjY*RadarTypes::RES_F_DISTY);
             break;
         }
 
