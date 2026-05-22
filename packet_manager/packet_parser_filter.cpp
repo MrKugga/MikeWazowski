@@ -2,24 +2,6 @@
 
 ADTF_PLUGIN(NAME_CUSTOM_FILTER, cPacketParserFilter);
 
-struct tEthernetStream {
-    static constexpr const tChar* const MetaTypeName = "radar/IP_Stream";
-    //RadarTypes::tEthernetHeader sEthernetHeader;                 // 4 bytes
-    //RadarTypes::tIPHeader sIPHeader;                        // 20 bytes     
-    //RadarTypes::tUDPHeader sUDPHeader;
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    // tSOMEIPPayloadHeader sSOMEIPPayloadHeader;
-};
-
-struct tAdtfNetworkHeader
-{
-    tUInt64 nTimestampUs;   // capture timestamp in microseconds
-    tUInt32 nFrameLength;   // total captured frame size
-    tUInt32 nOrigLength;    // original length (may differ if truncated)
-    tUInt8  nInterfaceId;   // source network interface index
-    tUInt8  nPadding[3];
-};
-
 cPacketParserFilter::cPacketParserFilter()
 {
     LOG_INFO("Initializing filter...");
@@ -27,7 +9,7 @@ cPacketParserFilter::cPacketParserFilter()
     SetDescription("Radar Packed Decoder");
 
     adtf::ucom::object_ptr<adtf::streaming::IStreamType const> pStreamType = 
-        adtf::ucom::make_object_ptr<stream_meta_type<tEthernetStream>>();
+        adtf::ucom::make_object_ptr<stream_meta_type<tEthernetPacket>>();
 
     adtf::ucom::object_ptr<adtf::streaming::IStreamType const> pPlainStreamType =
         adtf::ucom::make_object_ptr<adtf::streaming::stream_type_plain<tUInt64>>();
@@ -81,11 +63,11 @@ cPacketParserFilter::cPacketParserFilter()
 
 
 
-    auto oDescEthStream = adtf::mediadescription::structure<tEthernetStream>("tEthernetStream");
-    // oDescEthStream.createElement("sEthernetHeader", &tEthernetStream::sEthernetHeader, oDescEthernetHeader);
-    // oDescEthStream.createElement("sIPHeader", &tEthernetStream::sIPHeader, oDescIPHeader);
-    // oDescEthStream.createElement("sUDPHeader", &tEthernetStream::sUDPHeader, oDescUDPHeader);
-    oDescEthStream.createElement("sSOMEIPHeader", &tEthernetStream::sSOMEIPHeader, oDescSOMEIPHeader);
+    auto oDescEthStream = adtf::mediadescription::structure<tEthernetPacket>("tEthernetPacket");
+    // oDescEthStream.createElement("sEthernetHeader", &tEthernetPacket::sEthernetHeader, oDescEthernetHeader);
+    // oDescEthStream.createElement("sIPHeader", &tEthernetPacket::sIPHeader, oDescIPHeader);
+    // oDescEthStream.createElement("sUDPHeader", &tEthernetPacket::sUDPHeader, oDescUDPHeader);
+    oDescEthStream.createElement("sSOMEIPHeader", &tEthernetPacket::sSOMEIPHeader, oDescSOMEIPHeader);
 
 
 
@@ -127,69 +109,40 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         adtf::ucom::object_ptr_shared_locked<const adtf::streaming::ISampleBuffer> pSampleBuffer;
         RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
 
-        tUInt32 nTotalSize = static_cast<tUInt32>(pSampleBuffer->GetSize());
-        //LOG_INFO("Size: 0x%04x", nTotalSize);
+        const uint32_t nTotalSize = static_cast<const uint32_t>(pSampleBuffer->GetSize());
+        const tEthernetPacket* pCurrentPacket = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
+        
+        // Check if message is complete
+        RETURN_IF_FAILED(checkCompleteness(pCurrentPacket, nTotalSize));
 
-        const tEthernetStream* pVal = reinterpret_cast<const tEthernetStream*>(pSampleBuffer->GetPtr());
-        const tEthernetStream oVal = *pVal;
 
-        const uint32_t nMessageID = __builtin_bswap16(((uint32_t)oVal.sSOMEIPHeader.nServiceID << 16 | oVal.sSOMEIPHeader.nMethodID));
+        // Check if message is correct
+        // ???
+        
+        // Check if message is corrupted
+        // ???
 
-        LOG_INFO("MessageID: 0x%08x", nMessageID);
-        LOG_INFO("Expected MessageID: 0x%08x", RadarTypes::MESSAGEID_OBJECTS_0);
+        // Process message based on ServiceID+MethodID
+        RETURN_IF_FAILED(decodeMessage(pCurrentPacket));
 
-        switch (nMessageID) {
-            case RadarTypes::MESSAGEID_SENSORCONFIG:
-                LOG_INFO("Sensor config!");
-                break;
 
-            case RadarTypes::MESSAGEID_VEHDYN:
-                LOG_INFO("Vehicle Dynamics");
-                break;
+        //const uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
 
-            case RadarTypes::MESSAGEID_SENSORSTATUS:
-                LOG_INFO("SensorStatus");
-                break;
+        //LOG_INFO("MessageID: 0x%08x", nMessageID);
+        //LOG_INFO("Expected MessageID: 0x%08x", RadarTypes::MESSAGEID_OBJECTS_0);
 
-            case RadarTypes::MESSAGEID_OBJECTS_0:
-                LOG_INFO("Objects0");
-                break;
 
-            case RadarTypes::MESSAGEID_OBJECTS_1:
-                LOG_INFO("Objects1");
-                break;
-
-            case RadarTypes::MESSAGEID_RDINEAR_0:
-                LOG_INFO("RDINEAR0");
-                break;
-
-            case RadarTypes::MESSAGEID_RDINEAR_1:
-                LOG_INFO("RDINEAR1");
-                break;
-
-            case RadarTypes::MESSAGEID_RDINEAR_2:
-                LOG_INFO("RDINEAR2");
-                break;
-
-            case RadarTypes::MESSAGEID_RDIFAR_0:
-                LOG_INFO("RDIFAR0");
-                break;
-
-            case RadarTypes::MESSAGEID_RDIFAR_1:
-                LOG_INFO("RDIFAR1");
-                break;
-        } 
 
         //const tUInt64 nSwappedVal = __builtin_bswap64(nVal);
         //LOG_INFO("Data: 0x%08x", nOurServiceID);
 
-        // const tEthernetStream* val = reinterpret_cast<const tEthernetStream*>(pSampleBuffer->GetPtr());
+        // const tEthernetPacket* val = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
         // LOG_INFO("%hn", &val->sEthernetHeader.nEtherType);
         m_pWriter->Write(pSample);
 
     } else {
-        LOG_ERROR("ERROR!");
-        RETURN_ERROR(ERR_INVALID_ADDRESS);
+        LOG_ERROR("Error obtaining the sample!");
+        RETURN_ERROR(ERR_FAILED);
     }
 
     RETURN_NOERROR;
@@ -217,5 +170,78 @@ tResult cPacketParserFilter::Init(tInitStage eStage) {
 tResult cPacketParserFilter::Shutdown(tInitStage eStage) {
 
     LOG_INFO("Shutting down UDP Decoder");
+    RETURN_NOERROR;
+}
+
+tResult cPacketParserFilter::byteSwap(tEthernetPacket* oMessage) {
+    
+    //uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
+    //uint32_t nOurLength = __builtin_bswap32(oEditablePacket.sSOMEIPHeader.nLength);
+
+    RETURN_NOERROR;
+}
+
+// Check if the message is complete by comparing size of semple with length of message in the header
+tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize) {
+    
+    uint32_t nExpectedLength = __builtin_bswap32(oMessage->sSOMEIPHeader.nLength) + 8; // Payload + Header
+    
+    if(nSize < nExpectedLength) {
+        LOG_WARNING("SOME/IP Message is not complete. Dropping sample.");
+        RETURN_ERROR(ERR_FAILED);
+    }
+
+    RETURN_NOERROR;
+}
+
+// Decode message based on ServiceID and MethodID
+tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage) {
+    
+    const uint32_t nMessageID = 
+        (uint32_t)__builtin_bswap16(oMessage->sSOMEIPHeader.nServiceID) 
+        << 16 | __builtin_bswap16(oMessage->sSOMEIPHeader.nMethodID);
+
+    switch(nMessageID)
+    {
+        case RadarTypes::MESSAGEID_SENSORCONFIG:
+            break;
+        
+        case RadarTypes::MESSAGEID_VEHDYN:
+            break;
+
+        case RadarTypes::MESSAGEID_SENSORSTATUS:
+            break;
+
+        case RadarTypes::MESSAGEID_OBJECTS_0:
+            break;
+
+        case RadarTypes::MESSAGEID_OBJECTS_1:
+            break;
+
+        case RadarTypes::MESSAGEID_RDINEAR_0: {
+            const tRDI_Near0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near0_Packet*>(oMessage);
+            const uint32_t nTimeStamp = __builtin_bswap32(oDecodedMessage->sRDI_Near0.nTimeStamp);
+            LOG_INFO("Timestamp: %d", nTimeStamp);
+            break;
+        }
+
+        case RadarTypes::MESSAGEID_RDINEAR_1:
+            break;
+
+        case RadarTypes::MESSAGEID_RDINEAR_2:
+            break;
+
+        case RadarTypes::MESSAGEID_RDIFAR_0:
+            break;
+
+        case RadarTypes::MESSAGEID_RDIFAR_1:
+            break;
+        
+        default:
+            RETURN_ERROR(ERR_NOT_FOUND);
+            break;
+
+    }
+
     RETURN_NOERROR;
 }

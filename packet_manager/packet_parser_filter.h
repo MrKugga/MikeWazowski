@@ -4,7 +4,7 @@
 
 #define CID_CUSTOM_FILTER "packetpareser.filter.radar.cid"
 #define NAME_CUSTOM_FILTER "UDP Radar Decoder"
-#define HEADERS_SIZE 24 // Eth +
+#define HEADERS_SIZE 24 
 
 
 using namespace adtf::util;
@@ -13,19 +13,19 @@ using namespace adtf::streaming;
 using namespace adtf::filter;
 
 
-struct tSomeIpHeader
-{
-    uint16_t service_id;
-    uint16_t method_id;
-    uint32_t length;       // lunghezza payload + 8 bytes (da RequestID in poi)
-    uint16_t client_id;
-    uint16_t session_id;
-    uint8_t  protocol_version;
-    uint8_t  interface_version;
-    uint8_t  message_type;
-    uint8_t  return_code;
+struct tEthernetPacket {
+    static constexpr const tChar* const MetaTypeName = "radar/IP_Stream";
+    //RadarTypes::tEthernetHeader sEthernetHeader;                 // 4 bytes
+    //RadarTypes::tIPHeader sIPHeader;                        // 20 bytes     
+    //RadarTypes::tUDPHeader sUDPHeader;
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    // tSOMEIPPayloadHeader sSOMEIPPayloadHeader;
 };
 
+struct tRDI_Near0_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tRDI_Near_Message_0 sRDI_Near0;
+};
 
 enum class cSomeIpMessageType : uint8_t {
     eRequest            = 0x00,
@@ -57,6 +57,10 @@ public:
     tResult Shutdown(tInitStage eStage) override;
 
     tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pInSample);
+    tResult checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize);
+    tResult byteSwap(tEthernetPacket* oMessage);
+    tResult decodeMessage(const tEthernetPacket* oMessage);
+
 
 private:
     adtf::streaming::ISampleReader* m_pReader = nullptr; // Anonymous stream (UDP Raw bytes)
