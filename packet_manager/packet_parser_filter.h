@@ -1,8 +1,10 @@
 #pragma once
 #include <adtffiltersdk/adtf_filtersdk.h>
+#include "../assignment/RadarTypes.h"
 
 #define CID_CUSTOM_FILTER "packetpareser.filter.radar.cid"
 #define NAME_CUSTOM_FILTER "UDP Radar Decoder"
+#define HEADERS_SIZE 24 // Eth +
 
 
 using namespace adtf::util;
@@ -54,11 +56,15 @@ public:
     // tResult Stop() override;
     tResult Shutdown(tInitStage eStage) override;
 
-    tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pSample);
+    tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pInSample);
 
 private:
     adtf::streaming::ISampleReader* m_pReader = nullptr; // Anonymous stream (UDP Raw bytes)
     adtf::streaming::ISampleWriter* m_pWriter = nullptr; // Anonymous out (SOME/IP Payload)
+
+    char m_pEthHeaderBuffer[HEADERS_SIZE];
+    tInt32 m_nByteRead = 0;
+    tTimeStamp m_tmSampleTime = 0;
 
     // Properties
     adtf::base::property_variable<uint16_t> m_nExpectedServiceId{0x0000};
