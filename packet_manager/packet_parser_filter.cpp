@@ -184,6 +184,7 @@ tResult cPacketParserFilter::byteSwap(tEthernetPacket* oMessage) {
 // Check if the message is complete by comparing size of semple with length of message in the header
 tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize) {
     
+    // SOME/IP Header --> Big endian conversion
     uint32_t nExpectedLength = __builtin_bswap32(oMessage->sSOMEIPHeader.nLength) + 8; // Payload + Header
     
     if(nSize < nExpectedLength) {
@@ -197,46 +198,66 @@ tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, 
 // Decode message based on ServiceID and MethodID
 tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage) {
     
+    // SOME/IP Header --> big-endian conversion
     const uint32_t nMessageID = 
         (uint32_t)__builtin_bswap16(oMessage->sSOMEIPHeader.nServiceID) 
         << 16 | __builtin_bswap16(oMessage->sSOMEIPHeader.nMethodID);
 
+
+    // Decode sample in corresponding struct depending on the MessageID
     switch(nMessageID)
     {
-        case RadarTypes::MESSAGEID_SENSORCONFIG:
+        case RadarTypes::MESSAGEID_SENSORCONFIG: {
             break;
+        }
         
-        case RadarTypes::MESSAGEID_VEHDYN:
-            break;
-
-        case RadarTypes::MESSAGEID_SENSORSTATUS:
-            break;
-
-        case RadarTypes::MESSAGEID_OBJECTS_0:
-            break;
-
-        case RadarTypes::MESSAGEID_OBJECTS_1:
-            break;
-
-        case RadarTypes::MESSAGEID_RDINEAR_0: {
-            const tRDI_Near0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near0_Packet*>(oMessage);
-            const uint32_t nTimeStamp = __builtin_bswap32(oDecodedMessage->sRDI_Near0.nTimeStamp);
-            LOG_INFO("Timestamp: %d", nTimeStamp);
+        case RadarTypes::MESSAGEID_VEHDYN: {
             break;
         }
 
-        case RadarTypes::MESSAGEID_RDINEAR_1:
+        case RadarTypes::MESSAGEID_SENSORSTATUS: {
             break;
+        }
 
-        case RadarTypes::MESSAGEID_RDINEAR_2:
+        case RadarTypes::MESSAGEID_OBJECTS_0: {
+            const tObject0_Packet* oDecodedMessage = reinterpret_cast<const tObject0_Packet*>(oMessage);
+            const int16_t nObjX = oDecodedMessage->sObject0_msg.aObj.sObj[0].fDistX;
+            LOG_INFO("Object x: %d", nObjX);
             break;
+        }
 
-        case RadarTypes::MESSAGEID_RDIFAR_0:
+        case RadarTypes::MESSAGEID_OBJECTS_1: {
+            const tObject1_Packet* oDecodedMessage = reinterpret_cast<const tObject1_Packet*>(oMessage);
             break;
+        }
 
-        case RadarTypes::MESSAGEID_RDIFAR_1:
+        case RadarTypes::MESSAGEID_RDINEAR_0: {
+            const tRDI_Near0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near0_Packet*>(oMessage);
+            const uint32_t nTimeStamp = oDecodedMessage->sRDI_Near0.nTimeStamp;
+            //LOG_INFO("Timestamp: %d", nTimeStamp);
             break;
-        
+        }
+
+        case RadarTypes::MESSAGEID_RDINEAR_1: {
+            const tRDI_Near1_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near1_Packet*>(oMessage);
+            break;
+        }
+
+        case RadarTypes::MESSAGEID_RDINEAR_2: {
+            const tRDI_Near2_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near2_Packet*>(oMessage);
+            break;
+        }
+
+        case RadarTypes::MESSAGEID_RDIFAR_0: {
+            const tRDI_Far0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Far0_Packet*>(oMessage);
+            break;
+        }
+
+        case RadarTypes::MESSAGEID_RDIFAR_1: {
+        const tRDI_Far1_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Far1_Packet*>(oMessage);
+            break;
+        }
+
         default:
             RETURN_ERROR(ERR_NOT_FOUND);
             break;

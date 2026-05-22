@@ -27,12 +27,34 @@ struct tRDI_Near0_Packet {
     RadarTypes::tRDI_Near_Message_0 sRDI_Near0;
 };
 
-enum class cSomeIpMessageType : uint8_t {
-    eRequest            = 0x00,
-    eRequestNoReturn    = 0x01,
-    eNotification       = 0x02,
-    eResponse           = 0x80,
-    eError              = 0x81,
+struct tRDI_Near1_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tRDI_Near_Message_1 sRDI_Near1;
+};
+
+struct tRDI_Near2_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tRDI_Near_Message_2 sRDI_Near2;
+};
+
+struct tRDI_Far0_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tRDI_Far_Message_0 sRDI_Far0;
+};
+
+struct tRDI_Far1_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tRDI_Far_Message_1 sRDI_Far1;
+};
+
+struct tObject0_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tObject_Message_0 sObject0_msg;
+};
+
+struct tObject1_Packet {
+    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
+    RadarTypes::tObject_Message_1 sObject1_msg;
 };
 
 
