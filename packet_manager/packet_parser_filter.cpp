@@ -127,6 +127,7 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         tDecodedMessage oDecodedMessage;
         RETURN_IF_FAILED(decodeMessage(pCurrentPacket, oDecodedMessage));
 
+        
         LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage->sRDI_Near0.nTimeStamp;)
 
 

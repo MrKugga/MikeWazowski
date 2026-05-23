@@ -7,27 +7,27 @@
   <name/>
   <session_files>
     <project_file>
-      <url>./adtfsessions/MikeWazowski_ADTF.adtfsession</url>
+      <url>./adtfsessions/MikeWazowski.adtfsession</url>
       <properties_url/>
       <property_set/>
-      <name>MikeWazowski_ADTF</name>
+      <name>MikeWazowski</name>
     </project_file>
   </session_files>
   <graph_files>
     <project_file>
-      <url>./adtfsessions/adtfgraphs/MikeWazowski_ADTF.adtfgraph</url>
+      <url>./adtfsessions/adtfgraphs/MikeWazowski.adtfgraph</url>
       <properties_url/>
       <property_set/>
-      <name>MikeWazowski_ADTF</name>
+      <name>MikeWazowski</name>
     </project_file>
   </graph_files>
   <system_files>
     <project_file>
-      <url>./adtfsessions/adtfsystems/MikeWazowski_ADTF.adtfsystem</url>
+      <url>./adtfsessions/adtfsystems/MikeWazowski.adtfsystem</url>
       <properties_url/>
       <property_set/>
-      <name>MikeWazowski_ADTF</name>
+      <name>MikeWazowski</name>
     </project_file>
   </system_files>
-  <last_opened_session>./adtfsessions/MikeWazowski_ADTF.adtfsession</last_opened_session>
+  <last_opened_session>./adtfsessions/MikeWazowski.adtfsession</last_opened_session>
 </project>

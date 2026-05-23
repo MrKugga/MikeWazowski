@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<property_file xmlns="adtf/xsd/properties">
+  <file_version>
+    <major>1</major>
+    <minor>0</minor>
+  </file_version>
+  <property_packages>
+    <property_package>
+      <name>default</name>
+      <property_sets>
+        <property_set>
+          <name>graphs/playback</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/Player</name>
+          <properties>
+            <property>
+              <name>filenames</name>
+              <value>/home/adas-ee5/AudiProjects/Assignment1_ADTF_Plugin/beauty-contest-2026-adtf-task/record_20260220_132756.adtfdat</value>
+              <type>cFilenameList</type>
+              <link/>
+            </property>
+          </properties>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/Player/output_pins/radar_data_udp</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/Player/output_pins/egomotion</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/Player.radar_data_udp</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Player.radar_data_udp_Player.radar_data_udp.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Player.radar_data_udp._UDP Radar Decoder.Raw Ethernet Stream</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/Raw Ethernet Stream</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/Qt5 Media Description Display</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/UDP Radar Decoder.Decoded Output</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.Decoded Output_UDP Radar Decoder.Decoded Output.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/Decoded Output</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/Qt5 Media Description Display/input_pins/DecodedOutput</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.Decoded Output._Qt5 Media Description Display.DecodedOutput</name>
+          <properties/>
+        </property_set>
+      </property_sets>
+    </property_package>
+  </property_packages>
+</property_file>
