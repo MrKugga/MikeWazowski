@@ -123,7 +123,11 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         // ???
 
         // Process message based on ServiceID+MethodID
-        RETURN_IF_FAILED(decodeMessage(pCurrentPacket));
+
+        tDecodedMessage oDecodedMessage;
+        RETURN_IF_FAILED(decodeMessage(pCurrentPacket, oDecodedMessage));
+
+        LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage->sRDI_Near0.nTimeStamp;)
 
 
         //const uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
@@ -185,7 +189,7 @@ tResult cPacketParserFilter::byteSwap(tEthernetPacket* oMessage) {
 tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize) {
     
     // SOME/IP Header --> Big endian conversion
-    uint32_t nExpectedLength = __builtin_bswap32(oMessage->sSOMEIPHeader.nLength) + 8; // Payload + Header
+    uint32_t nExpectedLength = __builtin_bswap32(oMessage->sSOMEIPHeader.nLength) + 8; // Bytes covered by Length + 4 bytes Length + 4 bytes MessageID
     
     if(nSize < nExpectedLength) {
         LOG_WARNING("SOME/IP Message is not complete. Dropping sample.");
@@ -196,7 +200,7 @@ tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, 
 }
 
 // Decode message based on ServiceID and MethodID
-tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage) {
+tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage, tDecodedMessage& oDecodedOutput) {
     
     // SOME/IP Header --> big-endian conversion
     const uint32_t nMessageID = 
@@ -235,7 +239,7 @@ tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage) {
         case RadarTypes::MESSAGEID_RDINEAR_0: {
             const tRDI_Near0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near0_Packet*>(oMessage);
             const uint32_t nTimeStamp = oDecodedMessage->sRDI_Near0.nTimeStamp;
-            //LOG_INFO("Timestamp: %d", nTimeStamp);
+            LOG_INFO("Timestamp: %d", nTimeStamp);
             break;
         }
 

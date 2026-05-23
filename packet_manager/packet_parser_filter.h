@@ -1,6 +1,7 @@
 #pragma once
 #include <adtffiltersdk/adtf_filtersdk.h>
 #include "../assignment/RadarTypes.h"
+#include <variant>
 
 #define CID_CUSTOM_FILTER "packetpareser.filter.radar.cid"
 #define NAME_CUSTOM_FILTER "UDP Radar Decoder"
@@ -57,6 +58,11 @@ struct tObject1_Packet {
     RadarTypes::tObject_Message_1 sObject1_msg;
 };
 
+using tDecodedMessage = std::variant<
+            tObject0_Packet,
+            tRDI_Near0_Packet
+>;
+
 
 class cPacketParserFilter : public adtf::filter::cFilter
 
@@ -81,7 +87,7 @@ public:
     tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pInSample);
     tResult checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize);
     tResult byteSwap(tEthernetPacket* oMessage);
-    tResult decodeMessage(const tEthernetPacket* oMessage);
+    tResult decodeMessage(const tEthernetPacket* oMessage, tDecodedMessage& oDecodedMessage);
 
 
 private:
