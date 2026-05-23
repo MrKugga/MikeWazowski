@@ -127,8 +127,8 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         tDecodedMessage oDecodedMessage;
         RETURN_IF_FAILED(decodeMessage(pCurrentPacket, oDecodedMessage));
 
-        
-        LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage->sRDI_Near0.nTimeStamp;)
+
+        LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage.sRDI_Near0.nTimeStamp;)
 
 
         //const uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
