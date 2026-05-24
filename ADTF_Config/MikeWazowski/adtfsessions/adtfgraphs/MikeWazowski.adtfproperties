@@ -21,7 +21,7 @@
           <properties>
             <property>
               <name>filenames</name>
-              <value>/home/adas-ee5/AudiProjects/Assignment1_ADTF_Plugin/beauty-contest-2026-adtf-task/record_20260220_132756.adtfdat</value>
+              <value>/home/user/record_20260220_132756.adtfdat</value>
               <type>cFilenameList</type>
               <link/>
             </property>

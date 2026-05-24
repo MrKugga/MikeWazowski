@@ -1,7 +1,10 @@
 #pragma once
 #include <adtffiltersdk/adtf_filtersdk.h>
 #include "../assignment/RadarTypes.h"
+#include "validation_packet.h"
+#include "crc_utils.h"
 #include <variant>
+
 
 #define CID_CUSTOM_FILTER "packetpareser.filter.radar.cid"
 #define NAME_CUSTOM_FILTER "UDP Radar Decoder"
@@ -58,6 +61,22 @@ struct tObject1_Packet {
     RadarTypes::tObject_Message_1 sObject1_msg;
 };
 
+// Expected total size (SOME/IP header + payload struct) per message ID
+inline size_t expectedTotalSize(uint32_t nMessageID)
+{
+    switch (nMessageID)
+    {
+        case RadarTypes::MESSAGEID_RDINEAR_0:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_0);
+        case RadarTypes::MESSAGEID_RDINEAR_1:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_1);
+        case RadarTypes::MESSAGEID_RDINEAR_2:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_2);
+        case RadarTypes::MESSAGEID_RDIFAR_0:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Far_Message_0);
+        case RadarTypes::MESSAGEID_RDIFAR_1:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Far_Message_1);
+        case RadarTypes::MESSAGEID_OBJECTS_0: return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tObject_Message_0);
+        case RadarTypes::MESSAGEID_OBJECTS_1: return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tObject_Message_1);
+        default:return 0;
+    }
+}
+
 using tDecodedMessage = std::variant<
             tObject0_Packet,
             tRDI_Near0_Packet
@@ -88,6 +107,8 @@ public:
     tResult checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize);
     tResult byteSwap(tEthernetPacket* oMessage);
     tResult decodeMessage(const tEthernetPacket* oMessage, tDecodedMessage& oDecodedMessage);
+    EValidationResult ValidatePacket(const uint8_t* oMessage, const uint32_t nLen, uint32_t& nMessageID);
+
 
 
 private:
@@ -101,6 +122,5 @@ private:
     // Properties
     adtf::base::property_variable<uint16_t> m_nExpectedServiceId{0x0000};
     adtf::base::property_variable<uint16_t> m_nExpectedMethodId {0xFFFF};
-
 };
 
