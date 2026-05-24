@@ -2,6 +2,8 @@
 #include <adtffiltersdk/adtf_filtersdk.h>
 #include "../assignment/RadarTypes.h"
 #include "validation_packet.h"
+#include "decoded_messages.h"
+#include "decoder.h"
 #include "crc_utils.h"
 #include <variant>
 
@@ -16,73 +18,6 @@ using namespace adtf::ucom;
 using namespace adtf::streaming;
 using namespace adtf::filter;
 
-
-struct tEthernetPacket {
-    static constexpr const tChar* const MetaTypeName = "radar/IP_Stream";
-    //RadarTypes::tEthernetHeader sEthernetHeader;                 // 4 bytes
-    //RadarTypes::tIPHeader sIPHeader;                        // 20 bytes     
-    //RadarTypes::tUDPHeader sUDPHeader;
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    // tSOMEIPPayloadHeader sSOMEIPPayloadHeader;
-};
-
-struct tRDI_Near0_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tRDI_Near_Message_0 sRDI_Near0;
-};
-
-struct tRDI_Near1_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tRDI_Near_Message_1 sRDI_Near1;
-};
-
-struct tRDI_Near2_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tRDI_Near_Message_2 sRDI_Near2;
-};
-
-struct tRDI_Far0_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tRDI_Far_Message_0 sRDI_Far0;
-};
-
-struct tRDI_Far1_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tRDI_Far_Message_1 sRDI_Far1;
-};
-
-struct tObject0_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tObject_Message_0 sObject0_msg;
-};
-
-struct tObject1_Packet {
-    RadarTypes::tSOMEIPHeader sSOMEIPHeader;
-    RadarTypes::tObject_Message_1 sObject1_msg;
-};
-
-// Expected total size (SOME/IP header + payload struct) per message ID
-inline size_t expectedTotalSize(uint32_t nMessageID)
-{
-    switch (nMessageID)
-    {
-        case RadarTypes::MESSAGEID_RDINEAR_0:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_0);
-        case RadarTypes::MESSAGEID_RDINEAR_1:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_1);
-        case RadarTypes::MESSAGEID_RDINEAR_2:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Near_Message_2);
-        case RadarTypes::MESSAGEID_RDIFAR_0:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Far_Message_0);
-        case RadarTypes::MESSAGEID_RDIFAR_1:  return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tRDI_Far_Message_1);
-        case RadarTypes::MESSAGEID_OBJECTS_0: return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tObject_Message_0);
-        case RadarTypes::MESSAGEID_OBJECTS_1: return sizeof(RadarTypes::tSOMEIPHeader) + sizeof(RadarTypes::tObject_Message_1);
-        default:return 0;
-    }
-}
-
-using tDecodedMessage = std::variant<
-            tObject0_Packet,
-            tRDI_Near0_Packet
->;
-
-
 class cPacketParserFilter : public adtf::filter::cFilter
 
 {
@@ -94,7 +29,8 @@ public:
     cPacketParserFilter();
     virtual ~cPacketParserFilter() = default;
 
-    tResult ProcessInput(adtf::streaming::ISampleReader* pReader,
+    tResult ProcessInput(
+        adtf::streaming::ISampleReader* pReader,
         const   adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample) override;
     
     // lifecycle
@@ -103,21 +39,34 @@ public:
     // tResult Stop() override;
     tResult Shutdown(tInitStage eStage) override;
 
-    tResult ProcessSample(adtf::ucom::object_ptr<const adtf::streaming::ISample>& pInSample);
-    tResult checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize);
-    tResult byteSwap(tEthernetPacket* oMessage);
-    tResult decodeMessage(const tEthernetPacket* oMessage, tDecodedMessage& oDecodedMessage);
-    EValidationResult ValidatePacket(const uint8_t* oMessage, const uint32_t nLen, uint32_t& nMessageID);
-
-
 
 private:
-    adtf::streaming::ISampleReader* m_pReader = nullptr; // Anonymous stream (UDP Raw bytes)
-    adtf::streaming::ISampleWriter* m_pWriter = nullptr; // Anonymous out (SOME/IP Payload)
+    //adtf::streaming::ISampleWriter* m_pWriter = nullptr; // Anonymous out (SOME/IP Payload) --> old implementation
 
-    char m_pEthHeaderBuffer[HEADERS_SIZE];
-    tInt32 m_nByteRead = 0;
-    tTimeStamp m_tmSampleTime = 0;
+    // ── Input ─────────────────────────────────────────────────────────────
+    adtf::streaming::ISampleReader* m_pReader = nullptr;
+
+    // ── Outputs — one pin per decoded message type ────────────────────────
+    adtf::streaming::ISampleWriter* m_pRDIWriter        = nullptr;
+    adtf::streaming::ISampleWriter* m_pObjectWriter     = nullptr;
+    adtf::streaming::ISampleWriter* m_pStatusWriter     = nullptr;
+    adtf::streaming::ISampleWriter* m_pVehDynWriter     = nullptr;
+
+
+
+ // ── Debug state ───────────────────────────────────────────────────────
+    uint32_t m_nPacketCount  = 0;
+    bool     m_bDebugDone    = false;
+
+    // ── Internal write helpers ────────────────────────────────────────────
+    tResult writeRDI       (const RadarDecoded::tRDIMessage&              msg,
+                            adtf::base::tNanoSeconds                      tmSample);
+    tResult writeObject    (const RadarDecoded::tObjectMessage&           msg,
+                            adtf::base::tNanoSeconds                      tmSample);
+    tResult writeStatus    (const RadarDecoded::tSensorStatusDecoded&     msg,
+                            adtf::base::tNanoSeconds                      tmSample);
+    tResult writeVehDyn    (const RadarDecoded::tVehicleDynamicsDecoded&  msg,
+                            adtf::base::tNanoSeconds                      tmSample);
 
     // Properties
     adtf::base::property_variable<uint16_t> m_nExpectedServiceId{0x0000};

@@ -44,27 +44,7 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/Player.radar_data_udp._UDP Radar Decoder.Raw Ethernet Stream</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/Raw Ethernet Stream</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/filters/Qt5 Media Description Display</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/sample_streams/UDP Radar Decoder.Decoded Output</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.Decoded Output_UDP Radar Decoder.Decoded Output.</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/Decoded Output</name>
           <properties/>
         </property_set>
         <property_set>
@@ -72,7 +52,27 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.Decoded Output._Qt5 Media Description Display.DecodedOutput</name>
+          <name>graphs/playback/connections/Player.radar_data_udp._UDP Radar Decoder.raw_someip</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/raw_someip</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/UDP Radar Decoder.rdi_detections</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.rdi_detections_UDP Radar Decoder.rdi_detections.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/rdi_detections</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.rdi_detections._Qt5 Media Description Display.DecodedOutput</name>
           <properties/>
         </property_set>
       </property_sets>

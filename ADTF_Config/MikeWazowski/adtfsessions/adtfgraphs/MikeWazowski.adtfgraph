@@ -14,12 +14,12 @@
           <class_id>packetpareser.filter.radar.cid</class_id>
           <input_pins>
             <pin>
-              <name>Raw Ethernet Stream</name>
+              <name>raw_someip</name>
             </pin>
           </input_pins>
           <output_pins>
             <pin>
-              <name>Decoded Output</name>
+              <name>rdi_detections</name>
             </pin>
           </output_pins>
           <runners/>
@@ -78,7 +78,7 @@
           <deactivated>false</deactivated>
         </sample_stream>
         <sample_stream>
-          <name>UDP Radar Decoder.Decoded Output</name>
+          <name>UDP Radar Decoder.rdi_detections</name>
           <class_id>sample_stream.streaming.adtf.cid</class_id>
           <deactivated>false</deactivated>
         </sample_stream>
@@ -103,14 +103,14 @@
           <sync>true</sync>
         </connection>
         <connection>
-          <name>Player.radar_data_udp._UDP Radar Decoder.Raw Ethernet Stream</name>
+          <name>Player.radar_data_udp._UDP Radar Decoder.raw_someip</name>
           <source_connector_path>
             <connector/>
             <component>Player.radar_data_udp</component>
             <portbindingobject/>
           </source_connector_path>
           <destination_connector_path>
-            <connector>Raw Ethernet Stream</connector>
+            <connector>raw_someip</connector>
             <component>UDP Radar Decoder</component>
             <portbindingobject/>
           </destination_connector_path>
@@ -119,15 +119,15 @@
           <sync>true</sync>
         </connection>
         <connection>
-          <name>UDP Radar Decoder.Decoded Output_UDP Radar Decoder.Decoded Output.</name>
+          <name>UDP Radar Decoder.rdi_detections_UDP Radar Decoder.rdi_detections.</name>
           <source_connector_path>
-            <connector>Decoded Output</connector>
+            <connector>rdi_detections</connector>
             <component>UDP Radar Decoder</component>
             <portbindingobject/>
           </source_connector_path>
           <destination_connector_path>
             <connector/>
-            <component>UDP Radar Decoder.Decoded Output</component>
+            <component>UDP Radar Decoder.rdi_detections</component>
             <portbindingobject/>
           </destination_connector_path>
           <priority>0</priority>
@@ -135,10 +135,10 @@
           <sync>true</sync>
         </connection>
         <connection>
-          <name>UDP Radar Decoder.Decoded Output._Qt5 Media Description Display.DecodedOutput</name>
+          <name>UDP Radar Decoder.rdi_detections._Qt5 Media Description Display.DecodedOutput</name>
           <source_connector_path>
             <connector/>
-            <component>UDP Radar Decoder.Decoded Output</component>
+            <component>UDP Radar Decoder.rdi_detections</component>
             <portbindingobject/>
           </source_connector_path>
           <destination_connector_path>
