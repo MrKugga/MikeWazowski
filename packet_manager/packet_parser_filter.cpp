@@ -84,6 +84,7 @@ cPacketParserFilter::cPacketParserFilter()
 
 }
 
+
 tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReader ,
     const adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample)
 {   
@@ -110,39 +111,64 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
 
         const uint32_t nTotalSize = static_cast<const uint32_t>(pSampleBuffer->GetSize());
-        const tEthernetPacket* pCurrentPacket = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
+        //const tEthernetPacket* pCurrentPacket = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
         
-        // Check if message is complete
-        RETURN_IF_FAILED(checkCompleteness(pCurrentPacket, nTotalSize));
-
-
-        // Check if message is correct
-        // ???
+        const uint8_t* pCurrentPacket = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
         
-        // Check if message is corrupted
-        // ???
-
-        // Process message based on ServiceID+MethodID
-
         tDecodedMessage oDecodedMessage;
-        RETURN_IF_FAILED(decodeMessage(pCurrentPacket, oDecodedMessage));
+        EValidationResult eResult;
+        uint32_t nMessageID = 0;
 
-        
-        LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage->sRDI_Near0.nTimeStamp;)
+        static uint32_t nPacketCount = 0;
+        static bool     bDebugDone   = false;
+
+        // Parse message ID from every packet
+        uint16_t nServiceID = 0, nMethodID = 0;
+        std::memcpy(&nServiceID, pCurrentPacket + 0, 2); nServiceID = __builtin_bswap16(nServiceID);
+        std::memcpy(&nMethodID,  pCurrentPacket + 2, 2); nMethodID  = __builtin_bswap16(nMethodID);
+        const uint32_t nMsgID = (uint32_t)nServiceID << 16 | nMethodID;
 
 
-        //const uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
+        /* ------------------- CRC DEBUG -------------------------- */
 
-        //LOG_INFO("MessageID: 0x%08x", nMessageID);
-        //LOG_INFO("Expected MessageID: 0x%08x", RadarTypes::MESSAGEID_OBJECTS_0);
+       // Log first 20 packets of any type
+        if (nPacketCount < 20){
+            CRCUtils::checkCRCAcrossPackets(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                nPacketCount);
+        }
+        nPacketCount++;
 
+        // Debug only on RDINEAR_0
+        if (nMsgID == RadarTypes::MESSAGEID_RDINEAR_0 && !bDebugDone)
+        {
+            bDebugDone = true;
+            LOG_INFO("First RDINEAR_0 packet — size=%zu  expected=%zu",
+                nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader) +
+                sizeof(RadarTypes::tRDI_Near_Message_0));
 
+            CRCUtils::compareKnownCRC(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                sizeof(RadarTypes::tSOMEIPPayloadHeader));
 
-        //const tUInt64 nSwappedVal = __builtin_bswap64(nVal);
-        //LOG_INFO("Data: 0x%08x", nOurServiceID);
+            CRCUtils::debugAllCRCCombinations(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                sizeof(RadarTypes::tSOMEIPPayloadHeader));
+        }
 
-        // const tEthernetPacket* val = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
-        // LOG_INFO("%hn", &val->sEthernetHeader.nEtherType);
+        /* ------------------- CRC DEBUG END -------------------------- */
+
+        eResult = ValidatePacket(pCurrentPacket, nTotalSize, nMessageID);
+        if (eResult != EValidationResult::OK) {
+            LOG_WARNING("Decode failed at ts=%lld: %s",
+            static_cast<long long>(pSample->GetTime()),
+            toString(eResult));
+        RETURN_NOERROR;
+        }
         m_pWriter->Write(pSample);
 
     } else {
@@ -186,89 +212,71 @@ tResult cPacketParserFilter::byteSwap(tEthernetPacket* oMessage) {
     RETURN_NOERROR;
 }
 
-// Check if the message is complete by comparing size of semple with length of message in the header
-tResult cPacketParserFilter::checkCompleteness(const tEthernetPacket* oMessage, const uint32_t nSize) {
-    
-    // SOME/IP Header --> Big endian conversion
-    uint32_t nExpectedLength = __builtin_bswap32(oMessage->sSOMEIPHeader.nLength) + 8; // Bytes covered by Length + 4 bytes Length + 4 bytes MessageID
-    
-    if(nSize < nExpectedLength) {
-        LOG_WARNING("SOME/IP Message is not complete. Dropping sample.");
-        RETURN_ERROR(ERR_FAILED);
-    }
 
-    RETURN_NOERROR;
-}
-
-// Decode message based on ServiceID and MethodID
-tResult cPacketParserFilter::decodeMessage(const tEthernetPacket* oMessage, tDecodedMessage& oDecodedOutput) {
-    
-    // SOME/IP Header --> big-endian conversion
-    const uint32_t nMessageID = 
-        (uint32_t)__builtin_bswap16(oMessage->sSOMEIPHeader.nServiceID) 
-        << 16 | __builtin_bswap16(oMessage->sSOMEIPHeader.nMethodID);
-
-
-    // Decode sample in corresponding struct depending on the MessageID
-    switch(nMessageID)
+EValidationResult cPacketParserFilter::ValidatePacket(const uint8_t* oMessage, const uint32_t nLen, uint32_t& nMessageID)
+{
+    /* [1] Completeness check
+    1) SOME/IP Header --> Big endian conversion
+    2) Bytes covered by Length + 4 bytes Length + 4 bytes MessageID (+8)
+    */
+    if (nLen < sizeof(RadarTypes::tSOMEIPHeader))
     {
-        case RadarTypes::MESSAGEID_SENSORCONFIG: {
-            break;
-        }
-        
-        case RadarTypes::MESSAGEID_VEHDYN: {
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_SENSORSTATUS: {
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_OBJECTS_0: {
-            const tObject0_Packet* oDecodedMessage = reinterpret_cast<const tObject0_Packet*>(oMessage);
-            const int16_t nObjX = oDecodedMessage->sObject0_msg.aObj.sObj[0].fDistX;
-            const int16_t nObjY = oDecodedMessage->sObject0_msg.aObj.sObj[0].fDistY;
-            LOG_INFO("Object position: (%f, %f)", (double)nObjX*RadarTypes::RES_F_DISTX, (double)nObjY*RadarTypes::RES_F_DISTY);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_OBJECTS_1: {
-            const tObject1_Packet* oDecodedMessage = reinterpret_cast<const tObject1_Packet*>(oMessage);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_RDINEAR_0: {
-            const tRDI_Near0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near0_Packet*>(oMessage);
-            const uint32_t nTimeStamp = oDecodedMessage->sRDI_Near0.nTimeStamp;
-            LOG_INFO("Timestamp: %d", nTimeStamp);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_RDINEAR_1: {
-            const tRDI_Near1_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near1_Packet*>(oMessage);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_RDINEAR_2: {
-            const tRDI_Near2_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Near2_Packet*>(oMessage);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_RDIFAR_0: {
-            const tRDI_Far0_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Far0_Packet*>(oMessage);
-            break;
-        }
-
-        case RadarTypes::MESSAGEID_RDIFAR_1: {
-        const tRDI_Far1_Packet* oDecodedMessage = reinterpret_cast<const tRDI_Far1_Packet*>(oMessage);
-            break;
-        }
-
-        default:
-            RETURN_ERROR(ERR_NOT_FOUND);
-            break;
-
+        return EValidationResult::ERR_BUFFER_TOO_SHORT;
     }
 
-    RETURN_NOERROR;
+    RadarTypes::tSOMEIPHeader oSOMEIP{};
+    std::memcpy(&oSOMEIP, oMessage, sizeof(RadarTypes::tSOMEIPHeader));
+    nMessageID =  (uint32_t)__builtin_bswap16(oSOMEIP.nServiceID) << 16 | __builtin_bswap16(oSOMEIP.nMethodID);
+
+    const size_t nExpectedTotal = expectedTotalSize(nMessageID);
+    if (nExpectedTotal == 0)
+    {
+        return EValidationResult::ERR_UNKNOWN_MESSAGE_ID;
+    }
+
+    // SOME/IP nLength field sanity check
+    // nLength covers everything after the first 8 bytes (after ServiceID+MethodID+Length)
+    const size_t nExpectedSOMEIPLength =
+        nExpectedTotal - offsetof(RadarTypes::tSOMEIPHeader, nClientID);
+    uint32_t someIPHeaderLen = __builtin_bswap32(oSOMEIP.nLength); // byte-swap required!
+    if (someIPHeaderLen != nExpectedSOMEIPLength)
+    {
+        return EValidationResult::ERR_SOMEIP_LENGTH;
+    }
+
+    if (nLen < nExpectedTotal)
+    {
+        return EValidationResult::ERR_PAYLOAD_TOO_SHORT;
+    }
+    /* 
+    [3] Payload header check --> check if len is the same as in the someip header
+    */
+    const uint8_t* pPayload = oMessage + sizeof(RadarTypes::tSOMEIPHeader);
+    RadarTypes::tSOMEIPPayloadHeader oPayloadHeader{};
+    std::memcpy(&oPayloadHeader, pPayload, sizeof(RadarTypes::tSOMEIPPayloadHeader));
+
+    uint32_t payloadHeaderLen = (uint32_t(__builtin_bswap16(oPayloadHeader.nLen))); // byteswap-required
+    // if the two length are not the same the packet could be badly formatted
+    if ( payloadHeaderLen != someIPHeaderLen)
+    {   
+        return EValidationResult::ERR_PAYLOAD_LENGTH;
+    }
+
+   
+    /* 
+    [4] Checksum
+    */
+
+    /*
+    const uint8_t* pPayloadData = pPayload + sizeof(RadarTypes::tSOMEIPPayloadHeader);
+    size_t payloadDataLen = nLen - sizeof(RadarTypes::tSOMEIPHeader) - sizeof(RadarTypes::tSOMEIPPayloadHeader);
+    const uint16_t nComputedCRC = computeCRC16(pPayloadData, payloadDataLen);
+    if (nComputedCRC != __builtin_bswap16(oPayloadHeader.nCRC))
+    {
+        LOG_WARNING("CRC Expected: %d", __builtin_bswap16(oPayloadHeader.nCRC));
+        return EValidationResult::ERR_CRC;
+    }
+    */
+
+    return EValidationResult::OK;
 }

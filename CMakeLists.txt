@@ -12,6 +12,9 @@ find_package(adtffiltersdk REQUIRED)
 # --- Packet Parser ---
 adtf_add_filter(packet_parser_filter
     packet_manager/packet_parser_filter.h
+    packet_manager/validation_packet.h
+    packet_manager/crc_utils.h
+    packet_manager/crc_utils.cpp
     packet_manager/packet_parser_filter.cpp)
 adtf_install_filter(packet_parser_filter bin)
 adtf_create_plugindescription(TARGET packet_parser_filter PLUGIN_SUBDIR "bin")
