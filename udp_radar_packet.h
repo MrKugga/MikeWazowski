@@ -2,7 +2,7 @@
 #include <cstdint>
 
 // Magic number to validate packet integrity: "RDR\0"
-static constexpr uint32_t RADAR_UDP_MAGIC = 0x41756469
+static constexpr uint32_t RADAR_UDP_MAGIC = 0x41756469;
 
 // One detection point on the wire
 #pragma pack(push, 1)
