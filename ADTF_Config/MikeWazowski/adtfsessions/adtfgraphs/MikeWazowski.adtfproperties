@@ -44,14 +44,6 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/filters/Qt5 Media Description Display</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/filters/Qt5 Media Description Display/input_pins/DecodedOutput</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/connections/Player.radar_data_udp._UDP Radar Decoder.raw_someip</name>
           <properties/>
         </property_set>
@@ -72,7 +64,40 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.rdi_detections._Qt5 Media Description Display.DecodedOutput</name>
+          <name>graphs/playback/filters/UDP Sender To Non ADTF Application</name>
+          <properties>
+            <property>
+              <name>port</name>
+              <value>5000</value>
+              <type>tUInt16</type>
+              <link/>
+            </property>
+            <property>
+              <name>remote_host</name>
+              <value>localhost</value>
+              <type>cString</type>
+              <link/>
+            </property>
+          </properties>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/UDP Radar Decoder.udp_out</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_UDP Radar Decoder.udp_out.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/udp_out</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Sender To Non ADTF Application/input_pins/input</name>
           <properties/>
         </property_set>
       </property_sets>

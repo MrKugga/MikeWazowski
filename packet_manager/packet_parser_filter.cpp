@@ -11,9 +11,11 @@ cPacketParserFilter::cPacketParserFilter()
     m_pReader = CreateInputPin("raw_someip");
 
     
-    // m_pWriter = CreateOutputPin("Decoded Output", oDescEthStream); --> old implementation
-    // Outputs — one per decoded message category
-    m_pRDIWriter    = CreateOutputPin("rdi_detections",
+    // Outputs — one for udp out + one per decoded message category
+    m_pUDPWriter = CreateOutputPin("udp_out",
+    adtf::streaming::stream_type
+        <adtf::streaming::stream_meta_type_anonymous>());
+    m_pRDIWriter = CreateOutputPin("rdi_detections",
         adtf::streaming::stream_type
             <adtf::streaming::stream_meta_type_anonymous>());
     m_pObjectWriter = CreateOutputPin("objects",
@@ -113,13 +115,35 @@ tResult cPacketParserFilter::ProcessInput(
     const tResult oVisitResult = std::visit(RadarDecoded::overloaded{
 
         [&](const RadarDecoded::tRDIMessage& msg) -> tResult {
-            LOG_INFO("[pkt %u] %s → RDI sensor=%u detections=%u cycle=%u",
-            m_nPacketCount,
-            PacketValidator::messageIDToString(nMessageID),
-            msg.nSensorID,
-            msg.nNbOfDetections,
-            msg.nCycleCounter);
-            return writeRDI(msg, tmSample);
+             // Feed into cycle accumulator
+            const bool bCycleComplete =
+                m_oAccumulator.addMessage(msg, nMessageID);
+
+            if (bCycleComplete)
+                {
+                    LOG_INFO("Cycle %u complete — near=%u far=%u  buf=%zu bytes",
+                        m_oAccumulator.getCurrentCycle(),
+                        m_oAccumulator.getNearCount(),
+                        m_oAccumulator.getFarCount(),
+                        m_oAccumulator.getSendBufferSize());
+
+                    const size_t   nBufSize = m_oAccumulator.getSendBufferSize();
+                    const uint8_t* pBuf     = m_oAccumulator.getSendBuffer();
+
+                    // Allocate sample
+                    adtf::ucom::object_ptr<adtf::streaming::ISample> pSample;
+                    RETURN_IF_FAILED(adtf::streaming::alloc_sample(pSample, tmSample));
+
+                    // Lock buffer for writing — note object_ptr_locked, not object_ptr
+                    adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pBuffer;
+                    RETURN_IF_FAILED(pSample->WriteLock(pBuffer, nBufSize));
+
+                    std::memcpy(pBuffer->GetPtr(), pBuf, nBufSize);
+
+                    // Unlock happens automatically when pBuffer goes out of scope
+                    // Write to UDP output pin
+                    RETURN_IF_FAILED(m_pUDPWriter->Write(pSample));
+                }
         },
 
         [&](const RadarDecoded::tObjectMessage& msg) -> tResult {

@@ -5,6 +5,7 @@
 #include "decoded_messages.h"
 #include "decoder.h"
 #include "crc_utils.h"
+#include "cycle_accumulator.h"
 #include <variant>
 
 
@@ -46,19 +47,23 @@ private:
     // ── Input ─────────────────────────────────────────────────────────────
     adtf::streaming::ISampleReader* m_pReader = nullptr;
 
-    // ── Outputs — one pin per decoded message type ────────────────────────
+    // ── Outputs — one UDP stream + one pin per decoded message type ────────────────────────
+    adtf::streaming::ISampleWriter* m_pUDPWriter = nullptr;
     adtf::streaming::ISampleWriter* m_pRDIWriter        = nullptr;
     adtf::streaming::ISampleWriter* m_pObjectWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pStatusWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pVehDynWriter     = nullptr;
 
 
+    // ── Cycle accumulator ─────────────────────────────────────────────────
+    RadarDecoder::cCycleAccumulator m_oAccumulator;
 
- // ── Debug state ───────────────────────────────────────────────────────
+    // ── Debug state ───────────────────────────────────────────────────────
     uint32_t m_nPacketCount  = 0;
     bool     m_bDebugDone    = false;
 
     // ── Internal write helpers ────────────────────────────────────────────
+    
     tResult writeRDI       (const RadarDecoded::tRDIMessage&              msg,
                             adtf::base::tNanoSeconds                      tmSample);
     tResult writeObject    (const RadarDecoded::tObjectMessage&           msg,

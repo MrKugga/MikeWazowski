@@ -4,9 +4,8 @@ adtf_add_filter(packet_parser_filter
     packet_parser_filter.cpp
 )
 
-# Link against the radar_decoder library —
-# this also pulls in its include dirs and adtf::filtersdk transitively
-target_link_libraries(packet_parser_filter PRIVATE radar_decoder)
+# Link udp_sender — pulls in radar_decoder transitively
+target_link_libraries(packet_parser_filter PRIVATE udp_sender)
 
 adtf_install_filter(packet_parser_filter bin)
 adtf_create_plugindescription(

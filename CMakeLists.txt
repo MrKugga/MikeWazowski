@@ -8,3 +8,4 @@ find_package(adtffiltersdk REQUIRED)
 # radar_decoder is built first — packet_manager depends on it
 add_subdirectory(radar_decoder)
 add_subdirectory(packet_manager)
+add_subdirectory(udp_sender) 
