@@ -116,24 +116,59 @@ tResult cPacketParserFilter::ProcessInput(adtf::streaming::ISampleReader* pReade
         const uint8_t* pCurrentPacket = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
         
         tDecodedMessage oDecodedMessage;
-        RETURN_IF_FAILED(decodeMessage(pCurrentPacket, oDecodedMessage));
+        EValidationResult eResult;
+        uint32_t nMessageID = 0;
 
-        
-        LOG_INFO("Fuori dalla funzione; %d", oDecodedMessage->sRDI_Near0.nTimeStamp;)
+        static uint32_t nPacketCount = 0;
+        static bool     bDebugDone   = false;
+
+        // Parse message ID from every packet
+        uint16_t nServiceID = 0, nMethodID = 0;
+        std::memcpy(&nServiceID, pCurrentPacket + 0, 2); nServiceID = __builtin_bswap16(nServiceID);
+        std::memcpy(&nMethodID,  pCurrentPacket + 2, 2); nMethodID  = __builtin_bswap16(nMethodID);
+        const uint32_t nMsgID = (uint32_t)nServiceID << 16 | nMethodID;
 
 
-        //const uint32_t nMessageID = (uint32_t)__builtin_bswap16(oEditablePacket.sSOMEIPHeader.nServiceID) << 16 | __builtin_bswap16(oEditablePacket.sSOMEIPHeader.nMethodID);
+        /* ------------------- CRC DEBUG -------------------------- */
 
-        //LOG_INFO("MessageID: 0x%08x", nMessageID);
-        //LOG_INFO("Expected MessageID: 0x%08x", RadarTypes::MESSAGEID_OBJECTS_0);
+       // Log first 20 packets of any type
+        if (nPacketCount < 20){
+            CRCUtils::checkCRCAcrossPackets(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                nPacketCount);
+        }
+        nPacketCount++;
 
+        // Debug only on RDINEAR_0
+        if (nMsgID == RadarTypes::MESSAGEID_RDINEAR_0 && !bDebugDone)
+        {
+            bDebugDone = true;
+            LOG_INFO("First RDINEAR_0 packet — size=%zu  expected=%zu",
+                nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader) +
+                sizeof(RadarTypes::tRDI_Near_Message_0));
 
+            CRCUtils::compareKnownCRC(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                sizeof(RadarTypes::tSOMEIPPayloadHeader));
 
-        //const tUInt64 nSwappedVal = __builtin_bswap64(nVal);
-        //LOG_INFO("Data: 0x%08x", nOurServiceID);
+            CRCUtils::debugAllCRCCombinations(
+                pCurrentPacket, nTotalSize,
+                sizeof(RadarTypes::tSOMEIPHeader),
+                sizeof(RadarTypes::tSOMEIPPayloadHeader));
+        }
 
-        // const tEthernetPacket* val = reinterpret_cast<const tEthernetPacket*>(pSampleBuffer->GetPtr());
-        // LOG_INFO("%hn", &val->sEthernetHeader.nEtherType);
+        /* ------------------- CRC DEBUG END -------------------------- */
+
+        eResult = ValidatePacket(pCurrentPacket, nTotalSize, nMessageID);
+        if (eResult != EValidationResult::OK) {
+            LOG_WARNING("Decode failed at ts=%lld: %s",
+            static_cast<long long>(pSample->GetTime()),
+            toString(eResult));
+        RETURN_NOERROR;
+        }
         m_pWriter->Write(pSample);
 
     } else {
