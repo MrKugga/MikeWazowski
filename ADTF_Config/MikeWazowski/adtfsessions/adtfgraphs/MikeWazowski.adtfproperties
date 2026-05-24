@@ -44,10 +44,6 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/Player.radar_data_udp._UDP Radar Decoder.raw_someip</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/filters/UDP Radar Decoder/input_pins/raw_someip</name>
           <properties/>
         </property_set>
@@ -78,6 +74,12 @@
               <type>cString</type>
               <link/>
             </property>
+            <property>
+              <name>log_channels/default/log_level</name>
+              <value>255</value>
+              <type>tUInt8</type>
+              <link/>
+            </property>
           </properties>
         </property_set>
         <property_set>
@@ -93,11 +95,31 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
+          <name>graphs/playback/filters/UDP Sender To Non ADTF Application/input_pins/input</name>
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/filters/UDP Sender To Non ADTF Application/input_pins/input</name>
+          <name>graphs/playback/sample_streams/Sample Stream</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._Sample Stream.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Sample Stream._UDP Sender To Non ADTF Application.input</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/Sample Stream_2</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Player.radar_data_udp._Sample Stream_2.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Sample Stream_2._UDP Radar Decoder.raw_someip</name>
           <properties/>
         </property_set>
       </property_sets>

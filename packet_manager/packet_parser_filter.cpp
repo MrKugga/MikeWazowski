@@ -114,48 +114,66 @@ tResult cPacketParserFilter::ProcessInput(
 
     const tResult oVisitResult = std::visit(RadarDecoded::overloaded{
 
-        [&](const RadarDecoded::tRDIMessage& msg) -> tResult {
-             // Feed into cycle accumulator
+        [&](const RadarDecoded::tRDIMessage& msg) -> tResult
+        {
+            LOG_INFO("[pkt %u] %s → RDI sensor=%u det=%u cycle=%u",
+                m_nPacketCount,
+                PacketValidator::messageIDToString(nMessageID),
+                msg.nSensorID,
+                msg.nNbOfDetections,
+                msg.nCycleCounter);
+
+            // Feed into cycle accumulator
             const bool bCycleComplete =
                 m_oAccumulator.addMessage(msg, nMessageID);
 
             if (bCycleComplete)
+            {
+                const size_t nBufSize = m_oAccumulator.getSendBufferSize();
+
+                // Guard — must never be zero
+                if (nBufSize == 0)
                 {
-                    LOG_INFO("Cycle %u complete — near=%u far=%u  buf=%zu bytes",
-                        m_oAccumulator.getCurrentCycle(),
-                        m_oAccumulator.getNearCount(),
-                        m_oAccumulator.getFarCount(),
-                        m_oAccumulator.getSendBufferSize());
+                    LOG_ERROR("Cycle complete but buffer size is 0 — skipping");
+                    RETURN_NOERROR;  // ← bug 1 fix: always return
+                }
 
-                    const size_t   nBufSize = m_oAccumulator.getSendBufferSize();
-                    const uint8_t* pBuf     = m_oAccumulator.getSendBuffer();
+                LOG_INFO("Cycle %u complete — near=%u far=%u  buf=%zu bytes",
+                    m_oAccumulator.getCurrentCycle(),
+                    m_oAccumulator.getNearCount(),
+                    m_oAccumulator.getFarCount(),
+                    nBufSize);
 
-                    // Allocate sample
-                    adtf::ucom::object_ptr<adtf::streaming::ISample> pSample;
-                    RETURN_IF_FAILED(adtf::streaming::alloc_sample(pSample, tmSample));
+                const uint8_t* pBuf = m_oAccumulator.getSendBuffer();
 
-                    // Lock buffer for writing — note object_ptr_locked, not object_ptr
+                adtf::ucom::object_ptr<adtf::streaming::ISample> pSample;
+                RETURN_IF_FAILED(adtf::streaming::alloc_sample(pSample, tmSample));
+
+                {
                     adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pBuffer;
                     RETURN_IF_FAILED(pSample->WriteLock(pBuffer, nBufSize));
-
                     std::memcpy(pBuffer->GetPtr(), pBuf, nBufSize);
-
-                    // Unlock happens automatically when pBuffer goes out of scope
-                    // Write to UDP output pin
-                    RETURN_IF_FAILED(m_pUDPWriter->Write(pSample));
                 }
+
+                RETURN_IF_FAILED(m_pUDPWriter->Write(pSample));
+            }
+
+            RETURN_NOERROR;
         },
 
         [&](const RadarDecoded::tObjectMessage& msg) -> tResult {
-            return writeObject(msg, tmSample);
+            RETURN_NOERROR;
+            //return writeObject(msg, tmSample);
         },
 
         [&](const RadarDecoded::tSensorStatusDecoded& msg) -> tResult {
-            return writeStatus(msg, tmSample);
+            RETURN_NOERROR;
+            //return writeStatus(msg, tmSample);
         },
 
         [&](const RadarDecoded::tVehicleDynamicsDecoded& msg) -> tResult {
-            return writeVehDyn(msg, tmSample);
+            RETURN_NOERROR;
+            //return writeVehDyn(msg, tmSample);
         },
 
         [](std::monostate) -> tResult {
