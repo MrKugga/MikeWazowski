@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <array>
-#include <variant>   // ← std::variant, std::monostate
+#include <variant>
 #include "../assignment/RadarTypes.h"
 
 namespace RadarDecoded
@@ -129,7 +129,13 @@ struct tVehicleDynamicsDecoded
     float fLatAccel;    // [m/s^2]
 };
 
-// ── Variant ───────────────────────────────────────────────────────────────
+// ── Variant ──────────────────────────────────────────────────────────────
+
+/*
+Variant + Visit are a storng combo as the compiler create a dispatch table at compile time.
+Visit requires ONE callable (first argument) , that handles all. We use overload for this to
+combine multiple lambdas into ONE 
+*/
 
 using DecodedMessage = std::variant<
     std::monostate,
@@ -137,11 +143,23 @@ using DecodedMessage = std::variant<
     tObjectMessage,         // OBJECTS_0, OBJECTS_1
     tSensorStatusDecoded,   // SENSORSTATUS
     tVehicleDynamicsDecoded // VEHDYN
-    // SENSORCONFIG intentionally omitted — Tx only, not expected in recording
+    // SENSORCONFIG  Tx only, not expected in recording
 >;
 
+/*
+Create a struct called overloaded
+It inherits from every type in Ts...
+It brings all their operator() into scope
+
+overloaded merges multiple lambdas into a single struct that has all their operator() overloads, 
+so std::visit can call the right one based on what type the variant currently holds.
+*/
 template<typename... Ts>
 struct overloaded : Ts... { using Ts::operator()...; };
+
+/*
+Deduction guide --> neede by the compiler. Maybe not needed for C++20??? We
+*/
 template<typename... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
 
