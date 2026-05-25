@@ -1,7 +1,7 @@
 #pragma once
 #include "decoded_messages.h"
 #include "udp_radar_packet.h"
-#include "validation_packet.h"
+#include "validator.h"
 #include "../assignment/RadarTypes.h"
 #include <cstdint>
 

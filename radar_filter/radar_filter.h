@@ -1,7 +1,7 @@
 #pragma once
 #include <adtffiltersdk/adtf_filtersdk.h>
 #include "../assignment/RadarTypes.h"
-#include "validation_packet.h"
+#include "validator.h"
 #include "decoded_messages.h"
 #include "decoder.h"
 #include "crc_utils.h"

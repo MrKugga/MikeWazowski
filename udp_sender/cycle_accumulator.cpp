@@ -51,9 +51,9 @@ cNearAccumulator::cNearAccumulator()
 
 void cNearAccumulator::reset(uint32_t nNewCycle)
 {
-    LOG_INFO("NearAccumulator: reset %u → %u  (was %d%d%d  count=%u)",
-        m_nCurrentCycle, nNewCycle,
-        m_bNear0, m_bNear1, m_bNear2, m_nCount);
+    // LOG_INFO("NearAccumulator: reset %u → %u  (was %d%d%d  count=%u)",
+    //     m_nCurrentCycle, nNewCycle,
+    //     m_bNear0, m_bNear1, m_bNear2, m_nCount);
     m_nCurrentCycle = nNewCycle;
     m_nTimestampUs  = 0;
     m_bNear0 = false;
@@ -99,9 +99,9 @@ bool cNearAccumulator::addMessage(
             return false;
     }
 
-    LOG_INFO("NearAccumulator: %s accepted — state=%d%d%d count=%u",
-        PacketValidator::messageIDToString(nMessageID),
-        m_bNear0, m_bNear1, m_bNear2, m_nCount);
+    // LOG_INFO("NearAccumulator: %s accepted — state=%d%d%d count=%u",
+    //     PacketValidator::messageIDToString(nMessageID),
+    //     m_bNear0, m_bNear1, m_bNear2, m_nCount);
 
     return isComplete();
 }
@@ -115,9 +115,9 @@ cFarAccumulator::cFarAccumulator()
 
 void cFarAccumulator::reset(uint32_t nNewCycle)
 {
-    LOG_INFO("FarAccumulator: reset %u → %u  (was %d%d  count=%u)",
-        m_nCurrentCycle, nNewCycle,
-        m_bFar0, m_bFar1, m_nCount);
+    // LOG_INFO("FarAccumulator: reset %u → %u  (was %d%d  count=%u)",
+    //     m_nCurrentCycle, nNewCycle,
+    //     m_bFar0, m_bFar1, m_nCount);
     m_nCurrentCycle = nNewCycle;
     m_nTimestampUs  = 0;
     m_bFar0  = false;
@@ -156,9 +156,9 @@ bool cFarAccumulator::addMessage(
             return false;
     }
 
-    LOG_INFO("FarAccumulator: %s accepted — state=%d%d count=%u",
-        PacketValidator::messageIDToString(nMessageID),
-        m_bFar0, m_bFar1, m_nCount);
+    // LOG_INFO("FarAccumulator: %s accepted — state=%d%d count=%u",
+    //     PacketValidator::messageIDToString(nMessageID),
+    //     m_bFar0, m_bFar1, m_nCount);
 
     return isComplete();
 }
@@ -271,8 +271,8 @@ void cCycleAccumulator::serialise(
 
     m_nSendBufferSize = static_cast<size_t>(pCursor - m_aSendBuffer);
 
-    LOG_INFO("Serialised: near=%u far=%u bufSize=%zu",
-        nNearCount, nFarCount, m_nSendBufferSize);
+    // LOG_INFO("Serialised: near=%u far=%u bufSize=%zu",
+    //     nNearCount, nFarCount, m_nSendBufferSize);
 }
 
 } // namespace RadarDecoder

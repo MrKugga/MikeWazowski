@@ -28,8 +28,8 @@ def generate_launch_description():
 
         # Your radar node
         Node(
-            package='playground_package',
-            executable='playground_node',
-            name='playground_node',
+            package='udp_receiver',
+            executable='udp_receiver',
+            name='udp_receiver',
         ),
     ])

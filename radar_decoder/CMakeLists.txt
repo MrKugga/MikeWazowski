@@ -5,8 +5,8 @@ add_library(radar_decoder STATIC
     decoder.h
     decoder.cpp
     validation_result.h
-    validation_packet.h
-    validation_packet.cpp
+    validator.h
+    validator.cpp
 )
 
 # C++17 for std::variant

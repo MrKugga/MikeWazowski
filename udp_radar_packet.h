@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cstddef>  // size_t
 
 // Magic number to validate packet integrity: "RDR\0"
 static constexpr uint32_t RADAR_UDP_MAGIC = 0x41756469;

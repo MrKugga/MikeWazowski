@@ -8,7 +8,7 @@ import threading
 import array
 
 # ── Wire format constants (must match udp_radar_packet.h) ─────────────────
-RADAR_UDP_MAGIC   = 0x41756469
+RADAR_UDP_MAGIC   = 0x41756469 # Audi
 HEADER_FORMAT     = '<IIIHH'       # little-endian: magic, cycle, timestamp_us, near_count, far_count
 HEADER_SIZE       = struct.calcsize(HEADER_FORMAT)  # = 16 bytes
 
@@ -37,7 +37,7 @@ class RadarUdpReceiverNode(Node):
         self.declare_parameter('host',        '127.0.0.1')
         self.declare_parameter('port',        5000)
         self.declare_parameter('buffer_size', 65507)
-        self.declare_parameter('frame_id',    'radar')
+        self.declare_parameter('frame_id',    'radar_link')
         self.declare_parameter('near_topic',  '/radar/near')
         self.declare_parameter('far_topic',   '/radar/far')
 
@@ -126,7 +126,6 @@ class RadarUdpReceiverNode(Node):
         if near_count > 0:
             near_offset = HEADER_SIZE
             near_bytes  = data[near_offset : near_offset + near_count * POINT_SIZE]
-            self.get_logger().info("New near message published!")
             self.near_pub.publish(
                 self._build_pointcloud2(near_bytes, near_count, stamp))
 
@@ -134,7 +133,6 @@ class RadarUdpReceiverNode(Node):
         if far_count > 0:
             far_offset = HEADER_SIZE + near_count * POINT_SIZE
             far_bytes  = data[far_offset : far_offset + far_count * POINT_SIZE]
-            self.get_logger().info("New far message published!")
             self.far_pub.publish(
                 self._build_pointcloud2(far_bytes, far_count, stamp))
 

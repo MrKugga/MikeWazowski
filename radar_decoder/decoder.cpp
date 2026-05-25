@@ -11,9 +11,9 @@ static RadarDecoded::tPTPTimestamp convertPTP(
     const RadarTypes::tPTPTimestamp& r)
 {
     RadarDecoded::tPTPTimestamp o{};
-    o.nSecHi   = __builtin_bswap16(r.nPTPSec_Hi);
-    o.nSecLo   = __builtin_bswap32(r.nPTPSec_Lo);
-    o.nNanoSec = __builtin_bswap32(r.nPTPNanoSec);
+    o.nSecHi   = r.nPTPSec_Hi;
+    o.nSecLo   = r.nPTPSec_Lo;
+    o.nNanoSec = r.nPTPNanoSec;
     o.eSync    = r.ePTPSync;
     return o;
 }
@@ -23,28 +23,28 @@ static RadarDecoded::tRDIDetection convertRDI(
 {
     RadarDecoded::tRDIDetection o{};
 
-    o.fRange   = static_cast<float>(__builtin_bswap16(r.fRange))
+    o.fRange   = static_cast<float>(r.fRange)
                  * static_cast<float>(RadarTypes::RES_F_RANGE);
-    o.fVrelRad = static_cast<float>(__builtin_bswap16(r.fVrelRad))
+    o.fVrelRad = static_cast<float>(r.fVrelRad)
                  * static_cast<float>(RadarTypes::RES_F_VRELRAD);
-    o.fAzAng0  = static_cast<float>(__builtin_bswap16(r.aAzAng.fAzAng[0]))
+    o.fAzAng0  = static_cast<float>(r.aAzAng.fAzAng[0])
                  * static_cast<float>(RadarTypes::RES_F_AZIMUTH);
-    o.fAzAng1  = static_cast<float>(__builtin_bswap16(r.aAzAng.fAzAng[1]))
+    o.fAzAng1  = static_cast<float>(r.aAzAng.fAzAng[1])
                  * static_cast<float>(RadarTypes::RES_F_AZIMUTH);
-    o.fElAng   = static_cast<float>(__builtin_bswap16(r.fElAng))
+    o.fElAng   = static_cast<float>(r.fElAng)
                  * static_cast<float>(RadarTypes::RES_F_ELEVATION);
-    o.fRCS0    = static_cast<float>(__builtin_bswap16(r.aRCS.fRCS[0]))
+    o.fRCS0    = static_cast<float>(r.aRCS.fRCS[0])
                  * static_cast<float>(RadarTypes::RES_F_RCS);
-    o.fRCS1    = static_cast<float>(__builtin_bswap16(r.aRCS.fRCS[1]))
+    o.fRCS1    = static_cast<float>(r.aRCS.fRCS[1])
                  * static_cast<float>(RadarTypes::RES_F_RCS);
 
-    o.fRangeVar   = static_cast<float>(__builtin_bswap16(r.fRangeVar))
+    o.fRangeVar   = static_cast<float>(r.fRangeVar)
                     * static_cast<float>(RadarTypes::RES_F_RANGEVAR);
-    o.fVrelRadVar = static_cast<float>(__builtin_bswap16(r.fVrelRadVar))
+    o.fVrelRadVar = static_cast<float>(r.fVrelRadVar)
                     * static_cast<float>(RadarTypes::RES_F_VRELRADVAR);
-    o.fAzAngVar   = static_cast<float>(__builtin_bswap16(r.fAzAngVar))
+    o.fAzAngVar   = static_cast<float>(r.fAzAngVar)
                     * static_cast<float>(RadarTypes::RES_F_AZIMUHTVAR);
-    o.fElAngVar   = static_cast<float>(__builtin_bswap16(r.fElAngVar))
+    o.fElAngVar   = static_cast<float>(r.fElAngVar)
                     * static_cast<float>(RadarTypes::RES_F_ELEVATIONVAR);
 
     o.fSNR  = static_cast<float>(r.fSNR)
@@ -61,26 +61,26 @@ static RadarDecoded::tObjectDecoded convertObject(
 
     o.uObjId = r.uObjId;
 
-    o.fDistX    = static_cast<float>(__builtin_bswap16(r.fDistX))
+    o.fDistX    = static_cast<float>(r.fDistX)
                   * static_cast<float>(RadarTypes::RES_F_DISTX);
-    o.fDistY    = static_cast<float>(__builtin_bswap16(r.fDistY))
+    o.fDistY    = static_cast<float>(r.fDistY)
                   * static_cast<float>(RadarTypes::RES_F_DISTY);
-    o.fVabsX    = static_cast<float>(__builtin_bswap16(r.fVabsX))
+    o.fVabsX    = static_cast<float>(r.fVabsX)
                   * static_cast<float>(RadarTypes::RES_F_VABSX);
-    o.fVabsY    = static_cast<float>(__builtin_bswap16(r.fVabsY))
+    o.fVabsY    = static_cast<float>(r.fVabsY)
                   * static_cast<float>(RadarTypes::RES_F_VABSY);
-    o.fAabsX    = static_cast<float>(__builtin_bswap16(r.fAabsX))
+    o.fAabsX    = static_cast<float>(r.fAabsX)
                   * static_cast<float>(RadarTypes::RES_F_AABSX);
-    o.fAabsY    = static_cast<float>(__builtin_bswap16(r.fAabsY))
+    o.fAabsY    = static_cast<float>(r.fAabsY)
                   * static_cast<float>(RadarTypes::RES_F_AABSY);
 
-    o.fDistXStd = static_cast<float>(__builtin_bswap16(r.fDistXStd))
+    o.fDistXStd = static_cast<float>(r.fDistXStd)
                   * static_cast<float>(RadarTypes::RES_F_DISTXSTD);
-    o.fDistYStd = static_cast<float>(__builtin_bswap16(r.fDistYStd))
+    o.fDistYStd = static_cast<float>(r.fDistYStd)
                   * static_cast<float>(RadarTypes::RES_F_DISTYSTD);
-    o.fVabsXStd = static_cast<float>(__builtin_bswap16(r.fVabsXStd))
+    o.fVabsXStd = static_cast<float>(r.fVabsXStd)
                   * static_cast<float>(RadarTypes::RES_F_VABSXSTD);
-    o.fVabsYStd = static_cast<float>(__builtin_bswap16(r.fVabsYStd))
+    o.fVabsYStd = static_cast<float>(r.fVabsYStd)
                   * static_cast<float>(RadarTypes::RES_F_VABSYSTD);
 
     o.fAabsXStd = static_cast<float>(r.fAabsXStd)
@@ -90,19 +90,19 @@ static RadarDecoded::tObjectDecoded convertObject(
 
     for (int i = 0; i < 3; ++i)
     {
-        o.fLDeltaX[i] = static_cast<float>(__builtin_bswap16(r.aLDeltaX.fLDeltaX[i]))
+        o.fLDeltaX[i] = static_cast<float>(r.aLDeltaX.fLDeltaX[i])
                         * static_cast<float>(RadarTypes::RES_F_LDELTAX);
-        o.fLDeltaY[i] = static_cast<float>(__builtin_bswap16(r.aLDeltaY.fLDeltaY[i]))
+        o.fLDeltaY[i] = static_cast<float>(r.aLDeltaY.fLDeltaY[i])
                         * static_cast<float>(RadarTypes::RES_F_LDELTAY);
     }
 
     o.eShapeQualifier  = r.eShapeQualifier;
-    o.fObjOrientation  = static_cast<float>(__builtin_bswap16(r.fObjOrientation))
+    o.fObjOrientation  = static_cast<float>(r.fObjOrientation)
                          * static_cast<float>(RadarTypes::RES_F_OBJORIENTATION);
-    o.fRCS             = static_cast<float>(__builtin_bswap16(r.fRCS))
+    o.fRCS             = static_cast<float>(r.fRCS)
                          * static_cast<float>(RadarTypes::RES_F_RCS);
     o.uProbOfExistence = r.uProbOfExistence;
-    o.uLifeCycles      = __builtin_bswap16(r.uLifeCycles);
+    o.uLifeCycles      = r.uLifeCycles;
     o.eDynamicProperty = r.eDynamicProperty;
     o.eObjState        = r.eObjState;
 
@@ -121,14 +121,14 @@ static RadarDecoded::tRDIMessage decodeRDIMessage(
     o.nSensorID       = raw.nSensorID;
     o.nMessageCounter = raw.nMessageCounter;
     o.sPTPTimestamp   = convertPTP(raw.sPTPTimestamp);
-    o.nTimeStamp      = __builtin_bswap32(raw.nTimeStamp);
-    o.nCycleCounter   = __builtin_bswap32(raw.nCycleCounter);
+    o.nTimeStamp      = raw.nTimeStamp;
+    o.nCycleCounter   = raw.nCycleCounter;
     o.eSignalStatus   = raw.eSignalStatus;
-    o.fVAmbig         = static_cast<float>(__builtin_bswap16(raw.fVAmbig))
+    o.fVAmbig         = static_cast<float>(raw.fVAmbig)
                         * static_cast<float>(RadarTypes::RES_F_VAMBIG);
-    o.fMaxRange       = static_cast<float>(__builtin_bswap16(raw.fMaxRange))
+    o.fMaxRange       = static_cast<float>(raw.fMaxRange)
                         * static_cast<float>(RadarTypes::RES_F_MAXRANGE);
-    o.nNbOfDetections = __builtin_bswap16(raw.nNbOfDetections);
+    o.nNbOfDetections = raw.nNbOfDetections;
     o.nArraySize      = nArraySize;
 
     const uint16_t nCount = std::min(
@@ -153,14 +153,14 @@ static RadarDecoded::tObjectMessage decodeObjectMessage(
     o.nSensorID       = raw.nSensorID;
     o.nMessageCounter = raw.nMessageCounter;
     o.sPTPTimestamp   = convertPTP(raw.sPTPTimestamp);
-    o.nTimeStamp      = __builtin_bswap32(raw.nTimeStamp);
-    o.nCycleCounter   = __builtin_bswap32(raw.nCycleCounter);
+    o.nTimeStamp      = raw.nTimeStamp;
+    o.nCycleCounter   = raw.nCycleCounter;
     o.eSignalStatus   = raw.eSignalStatus;
-    o.fEgoVx          = static_cast<float>(__builtin_bswap16(raw.fEgoVx))
+    o.fEgoVx          = static_cast<float>(raw.fEgoVx)
                         * static_cast<float>(RadarTypes::RES_F_EGOVX);
-    o.fEgoYawRate     = static_cast<float>(__builtin_bswap16(raw.fEgoYawRate))
+    o.fEgoYawRate     = static_cast<float>(raw.fEgoYawRate)
                         * static_cast<float>(RadarTypes::RES_F_EGOYAWRATE);
-    o.nNbOfObjects    = __builtin_bswap16(raw.nNbOfObjects);
+    o.nNbOfObjects    = raw.nNbOfObjects;
     o.nArraySize      = nArraySize;
 
     const uint16_t nCount = std::min(
@@ -256,26 +256,26 @@ EValidationResult decode(
 
             RadarDecoded::tSensorStatusDecoded o{};
             o.nSensorID          = raw.nSensorID;
-            o.fCurrentLongPos    = static_cast<float>(__builtin_bswap16(raw.fCurrentLongPos))
+            o.fCurrentLongPos    = static_cast<float>(raw.fCurrentLongPos)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTLONGPOS);
-            o.fCurrentLatPos     = static_cast<float>(__builtin_bswap16(raw.fCurrentLatPos))
+            o.fCurrentLatPos     = static_cast<float>(raw.fCurrentLatPos)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTLATPOS);
-            o.fCurrentVertPos    = static_cast<float>(__builtin_bswap16(raw.fCurrentVertPos))
+            o.fCurrentVertPos    = static_cast<float>(raw.fCurrentVertPos)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTVERTPOS);
-            o.fCurrentLongPosCoG = static_cast<float>(__builtin_bswap16(raw.fCurrentLongPosCoG))
+            o.fCurrentLongPosCoG = static_cast<float>(raw.fCurrentLongPosCoG)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTLONGPOSCOG);
-            o.fCurrentYawAngle   = static_cast<float>(__builtin_bswap16(raw.fCurrentYawAngle))
+            o.fCurrentYawAngle   = static_cast<float>(raw.fCurrentYawAngle)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTYAWANGLE);
-            o.fCurrentDamping    = static_cast<float>(__builtin_bswap16(raw.fCurrentDamping))
+            o.fCurrentDamping    = static_cast<float>(raw.fCurrentDamping)
                                    * static_cast<float>(RadarTypes::RES_F_CURRENTDAMPING);
             o.nDefective         = raw.nDefective;
             o.nExtDisturbed      = raw.nExtDistrubed;
             o.nComError          = raw.nComError;
-            o.fAlnMisalignmentAzNear = static_cast<float>(__builtin_bswap16(raw.fAlnMisalignmentAzNear))
+            o.fAlnMisalignmentAzNear = static_cast<float>(raw.fAlnMisalignmentAzNear)
                                        * static_cast<float>(RadarTypes::RES_F_ALNMISALIGNMENTAZNEAR);
-            o.fAlnMisalignmentAzFar  = static_cast<float>(__builtin_bswap16(raw.fAlnMisalignmentAzFar))
+            o.fAlnMisalignmentAzFar  = static_cast<float>(raw.fAlnMisalignmentAzFar)
                                        * static_cast<float>(RadarTypes::RES_F_ALNMISALIGNMENTAZFAR);
-            o.fAlnMisalignmentElev   = static_cast<float>(__builtin_bswap16(raw.fAlnMisalignmentElev))
+            o.fAlnMisalignmentElev   = static_cast<float>(raw.fAlnMisalignmentElev)
                                        * static_cast<float>(RadarTypes::RES_F_ALNMISALIGNMENTELEV);
             o.nAlnStatus         = raw.nAlnStatus;
             oOutput = o;
@@ -288,13 +288,13 @@ EValidationResult decode(
 
             RadarDecoded::tVehicleDynamicsDecoded o{};
             o.eLongDir   = raw.eLongDir;
-            o.fLongVel   = static_cast<float>(__builtin_bswap16(raw.fLongVel))
+            o.fLongVel   = static_cast<float>(raw.fLongVel)
                            * static_cast<float>(RadarTypes::RES_F_LONGVEL);
-            o.fYawRate   = static_cast<float>(__builtin_bswap16(raw.fYawRate))
+            o.fYawRate   = static_cast<float>(raw.fYawRate)
                            * static_cast<float>(RadarTypes::RES_F_YAWRATE);
-            o.fLongAccel = static_cast<float>(__builtin_bswap16(raw.fLongAccel))
+            o.fLongAccel = static_cast<float>(raw.fLongAccel)
                            * static_cast<float>(RadarTypes::RES_F_LONGACCEL);
-            o.fLatAccel  = static_cast<float>(__builtin_bswap16(raw.fLatAccel))
+            o.fLatAccel  = static_cast<float>(raw.fLatAccel)
                            * static_cast<float>(RadarTypes::RES_F_LATACCEL);
             oOutput = o;
             break;

@@ -1,4 +1,4 @@
-#include "packet_parser_filter.h"
+#include "radar_filter.h"
 
 ADTF_PLUGIN(NAME_CUSTOM_FILTER, cPacketParserFilter);
 
@@ -68,10 +68,10 @@ tResult cPacketParserFilter::ProcessInput(
         if (nMessageIDOut == RadarTypes::MESSAGEID_RDINEAR_0)
         {
             m_bDebugDone = true;
-            LOG_INFO("First RDINEAR_0: size=%zu expected=%zu",
-                nLen,
-                sizeof(RadarTypes::tSOMEIPHeader) +
-                sizeof(RadarTypes::tRDI_Near_Message_0));
+            // LOG_INFO("First RDINEAR_0: size=%zu expected=%zu",
+            //     nLen,
+            //     sizeof(RadarTypes::tSOMEIPHeader) +
+            //     sizeof(RadarTypes::tRDI_Near_Message_0));
 
             CRCUtils::compareKnownCRC(
                 pData, nLen,
@@ -116,12 +116,12 @@ tResult cPacketParserFilter::ProcessInput(
 
         [&](const RadarDecoded::tRDIMessage& msg) -> tResult
         {
-            LOG_INFO("[pkt %u] %s → RDI sensor=%u det=%u cycle=%u",
-                m_nPacketCount,
-                PacketValidator::messageIDToString(nMessageID),
-                msg.nSensorID,
-                msg.nNbOfDetections,
-                msg.nCycleCounter);
+            // LOG_INFO("[pkt %u] %s → RDI sensor=%u det=%u cycle=%u",
+            //     m_nPacketCount,
+            //     PacketValidator::messageIDToString(nMessageID),
+            //     msg.nSensorID,
+            //     msg.nNbOfDetections,
+            //     msg.nCycleCounter);
 
             // Feed into cycle accumulator
             const bool bCycleComplete =
@@ -205,16 +205,16 @@ tResult cPacketParserFilter::writeObject(
     const RadarDecoded::tObjectMessage& msg,
     adtf::base::tNanoSeconds            tmSample)
 {
-    LOG_INFO("OBJ: sensor=%u  objects=%u/%u  cycle=%u  ts=%u  "
-             "egoVx=%.2f m/s  egoYaw=%.4f rad/s  status=%u",
-        msg.nSensorID,
-        msg.nNbOfObjects,
-        msg.nArraySize,
-        msg.nCycleCounter,
-        msg.nTimeStamp,
-        msg.fEgoVx,
-        msg.fEgoYawRate,
-        static_cast<uint8_t>(msg.eSignalStatus));
+    // LOG_INFO("OBJ: sensor=%u  objects=%u/%u  cycle=%u  ts=%u  "
+    //          "egoVx=%.2f m/s  egoYaw=%.4f rad/s  status=%u",
+    //     msg.nSensorID,
+    //     msg.nNbOfObjects,
+    //     msg.nArraySize,
+    //     msg.nCycleCounter,
+    //     msg.nTimeStamp,
+    //     msg.fEgoVx,
+    //     msg.fEgoYawRate,
+    //     static_cast<uint8_t>(msg.eSignalStatus));
 
     adtf::streaming::output_sample_data<RadarDecoded::tObjectMessage>
         oOut(tmSample, msg);
@@ -246,13 +246,13 @@ tResult cPacketParserFilter::writeVehDyn(
     const RadarDecoded::tVehicleDynamicsDecoded& msg,
     adtf::base::tNanoSeconds                     tmSample)
 {
-    LOG_INFO("VEHDYN: vel=%.2f m/s  yawrate=%.4f rad/s  "
-             "longAccel=%.3f m/s^2  latAccel=%.3f m/s^2  dir=%u",
-        msg.fLongVel,
-        msg.fYawRate,
-        msg.fLongAccel,
-        msg.fLatAccel,
-        static_cast<uint8_t>(msg.eLongDir));
+    // LOG_INFO("VEHDYN: vel=%.2f m/s  yawrate=%.4f rad/s  "
+    //          "longAccel=%.3f m/s^2  latAccel=%.3f m/s^2  dir=%u",
+    //     msg.fLongVel,
+    //     msg.fYawRate,
+    //     msg.fLongAccel,
+    //     msg.fLatAccel,
+    //     static_cast<uint8_t>(msg.eLongDir));
 
     adtf::streaming::output_sample_data<RadarDecoded::tVehicleDynamicsDecoded>
         oOut(tmSample, msg);

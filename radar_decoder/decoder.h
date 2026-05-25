@@ -1,7 +1,7 @@
 #pragma once
 #include "decoded_messages.h"
 #include "../assignment/RadarTypes.h"
-#include "validation_packet.h" 
+#include "validator.h" 
 #include "validation_result.h"
 
 namespace RadarDecoder
