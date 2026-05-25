@@ -158,7 +158,12 @@ class RadarUdpReceiverNode(Node):
         msg.is_dense     = False
 
         # Use list of ints — most compatible with all ROS2/CycloneDDS versions
-        msg.data = list(raw_bytes)
+        # msg.data = list(raw_bytes)
+        
+        cloud = bytes()
+        for i in enumerate(raw_bytes):
+            x, y, z, vel, rcs, snr, pdh0 = struct.unpack_from(POINT_FORMAT, raw_bytes, 0)
+        
 
         return msg
 

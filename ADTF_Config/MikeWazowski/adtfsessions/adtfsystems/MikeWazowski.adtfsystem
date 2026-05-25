@@ -113,6 +113,12 @@
     <plugin>
       <url>$(ADTF_DIR)/bin/foreign_application_udp.adtfplugin</url>
     </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/adtf_stream_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/radar_filter.adtfplugin</url>
+    </plugin>
   </plugins>
   <debug_plugins>
     <plugin>
@@ -147,6 +153,12 @@
     </plugin>
     <plugin>
       <url>$(ADTF_DIR)/bin/debug/foreign_application_udp.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_QT5_DIR)/bin/debug/adtf_stream_display.adtfplugin</url>
+    </plugin>
+    <plugin>
+      <url>$(ADTF_DIR)/bin/radar_filter.adtfplugin</url>
     </plugin>
   </debug_plugins>
   <services>

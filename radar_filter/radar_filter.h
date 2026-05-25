@@ -46,6 +46,7 @@ private:
 
     // ── Input ─────────────────────────────────────────────────────────────
     adtf::streaming::ISampleReader* m_pReader = nullptr;
+    adtf::streaming::ISampleReader* m_pVehDynReader = nullptr;
 
     // ── Outputs — one UDP stream + one pin per decoded message type ────────────────────────
     adtf::streaming::ISampleWriter* m_pUDPWriter = nullptr;
@@ -53,6 +54,7 @@ private:
     adtf::streaming::ISampleWriter* m_pObjectWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pStatusWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pVehDynWriter     = nullptr;
+    
 
 
     // ── Cycle accumulator ─────────────────────────────────────────────────

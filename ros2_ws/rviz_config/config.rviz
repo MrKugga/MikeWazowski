@@ -52,8 +52,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 30511469661016556000
-        Min Value: 0.6740170121192932
+        Max Value: 1.0369141101837158
+        Min Value: -0.35147184133529663
         Value: true
       Axis: Z
       Channel Name: rcs
@@ -64,9 +64,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 40.59877395629883
+      Max Intensity: 15.451520919799805
       Min Color: 0; 0; 0
-      Min Intensity: -18.735313415527344
+      Min Intensity: 0
       Name: Radar Near Scans
       Position Transformer: XYZ
       Selectable: true
@@ -80,7 +80,7 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /radar/near
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -97,9 +97,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 12.167729377746582
+      Max Intensity: 38.27631378173828
       Min Color: 0; 0; 0
-      Min Intensity: 12.167729377746582
+      Min Intensity: -28.67214012145996
       Name: Radar Far Scans
       Position Transformer: XYZ
       Selectable: true
@@ -113,7 +113,7 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /radar/far
       Use Fixed Frame: true
-      Use rainbow: true
+      Use rainbow: false
       Value: true
     - Class: rviz_default_plugins/Axes
       Enabled: true
@@ -193,25 +193,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 38.208106994628906
+      Distance: 63.22895812988281
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: -1.37062668800354
+        Y: 3.7388291358947754
+        Z: 1.4967453479766846
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5603994727134705
+      Pitch: 0.38539859652519226
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.277263879776001
+      Yaw: 3.332280158996582
     Saved: ~
 Window Geometry:
   Displays:

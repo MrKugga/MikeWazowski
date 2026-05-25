@@ -13,10 +13,6 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/filters/Player</name>
           <properties>
             <property>
@@ -44,22 +40,6 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/raw_someip</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/sample_streams/UDP Radar Decoder.rdi_detections</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.rdi_detections_UDP Radar Decoder.rdi_detections.</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/rdi_detections</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/filters/UDP Sender To Non ADTF Application</name>
           <properties>
             <property>
@@ -83,31 +63,11 @@
           </properties>
         </property_set>
         <property_set>
-          <name>graphs/playback/sample_streams/UDP Radar Decoder.udp_out</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_UDP Radar Decoder.udp_out.</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/udp_out</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/filters/UDP Sender To Non ADTF Application/input_pins/input</name>
           <properties/>
         </property_set>
         <property_set>
           <name>graphs/playback/sample_streams/Sample Stream</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._Sample Stream.</name>
-          <properties/>
-        </property_set>
-        <property_set>
-          <name>graphs/playback/connections/Sample Stream._UDP Sender To Non ADTF Application.input</name>
           <properties/>
         </property_set>
         <property_set>
@@ -119,7 +79,27 @@
           <properties/>
         </property_set>
         <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder</name>
+          <properties/>
+        </property_set>
+        <property_set>
           <name>graphs/playback/connections/Sample Stream_2._UDP Radar Decoder.raw_someip</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/raw_someip</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_Sample Stream.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/output_pins/udp_out</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Sample Stream._UDP Sender To Non ADTF Application.input</name>
           <properties/>
         </property_set>
       </property_sets>
