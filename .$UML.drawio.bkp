@@ -27,7 +27,7 @@
         <mxCell id="epN_D8eFBpK6qwdLkv2i-9" value="Cycle Accumulator&lt;div&gt;(cycle_accumilator.cpp)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="epN_D8eFBpK6qwdLkv2i-1">
           <mxGeometry x="230" y="170" width="140" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="epN_D8eFBpK6qwdLkv2i-17" value="&lt;div&gt;Validator&lt;/div&gt;&lt;div&gt;(validation_packet.cpp)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="epN_D8eFBpK6qwdLkv2i-1">
+        <mxCell id="epN_D8eFBpK6qwdLkv2i-17" value="&lt;div&gt;Validator&lt;/div&gt;&lt;div&gt;(validator.cpp)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="epN_D8eFBpK6qwdLkv2i-1">
           <mxGeometry x="380" y="90" width="140" height="70" as="geometry" />
         </mxCell>
         <mxCell id="epN_D8eFBpK6qwdLkv2i-18" value="&lt;div&gt;ADTF Radar Filter&lt;/div&gt;&lt;div&gt;(radar_filter.cpp)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="epN_D8eFBpK6qwdLkv2i-1">

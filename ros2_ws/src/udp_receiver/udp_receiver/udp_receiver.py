@@ -40,6 +40,7 @@ class RadarUdpReceiverNode(Node):
         self.declare_parameter('frame_id',    'radar_link')
         self.declare_parameter('near_topic',  '/radar/near')
         self.declare_parameter('far_topic',   '/radar/far')
+        self.declare_parameter('use_pdh0', False)
 
         host        = self.get_parameter('host').value
         port        = self.get_parameter('port').value
@@ -47,6 +48,7 @@ class RadarUdpReceiverNode(Node):
         self.frame_id    = self.get_parameter('frame_id').value
         near_topic  = self.get_parameter('near_topic').value
         far_topic   = self.get_parameter('far_topic').value
+        self.use_pdh0 = self.get_parameter('use_pdh0').value
 
         # Publishers
         self.near_pub = self.create_publisher(PointCloud2, near_topic, 10)
@@ -157,13 +159,21 @@ class RadarUdpReceiverNode(Node):
         msg.row_step     = POINT_STEP * point_count
         msg.is_dense     = False
 
-        # Use list of ints — most compatible with all ROS2/CycloneDDS versions
-        # msg.data = list(raw_bytes)
+        # Parse only points with pdh0 = 0        
+        if self.use_pdh0:
+            cloud = bytearray()
+            for i in range(point_count):
+                offset = i * POINT_SIZE
+                x, y, z, vel, rcs, snr, pdh0 = struct.unpack_from(POINT_FORMAT, raw_bytes, offset)
+
+                if pdh0 == 0x00:
+                    cloud += struct.pack(POINT_FORMAT, x, y, z, vel, rcs, snr, pdh0)
+
+            msg.data = list(cloud)
         
-        cloud = bytes()
-        for i in enumerate(raw_bytes):
-            x, y, z, vel, rcs, snr, pdh0 = struct.unpack_from(POINT_FORMAT, raw_bytes, 0)
-        
+        # Parse all the points
+        else:
+            msg.data = list(raw_bytes)
 
         return msg
 
