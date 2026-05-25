@@ -2,14 +2,57 @@
 
 ADTF_PLUGIN(NAME_CUSTOM_FILTER, cPacketParserFilter);
 
+// We dont know the Egomotion packet so we print it and analyze it! --> to be removed? Keep as debug.
+static void dumpEgomotionPacket(const uint8_t* pData, size_t nLen)
+{
+    LOG_INFO("=== Egomotion packet: %zu bytes ===", nLen);
+    LOG_INFO("  sizeof(tEgoMaster3DData) = %zu",
+        sizeof(EgoMasterIntf_V3::tEgoMaster3DData));
+    LOG_INFO("  size match: %s",
+        nLen >= sizeof(EgoMasterIntf_V3::tEgoMaster3DData)
+            ? "YES" : "NO — too short");
+
+    // Dump first 32 bytes for visual inspection
+    for (size_t i = 0; i < std::min(nLen, size_t(32)); ++i)
+        LOG_INFO("  [%03zu] 0x%02X  %3u", i, pData[i], pData[i]);
+
+    // If size matches — dump key fields
+    if (nLen >= sizeof(EgoMasterIntf_V3::tEgoMaster3DData))
+    {
+        EgoMasterIntf_V3::tEgoMaster3DData oEgo{};
+        std::memcpy(&oEgo, pData,
+            sizeof(EgoMasterIntf_V3::tEgoMaster3DData));
+
+        LOG_INFO("  nTime:              %lld us",
+            static_cast<long long>(oEgo.nTime));
+        LOG_INFO("  sVelocity:          X=%.4f  Y=%.4f  Z=%.4f  conf=%d",
+            oEgo.sVelocity.fValX,
+            oEgo.sVelocity.fValY,
+            oEgo.sVelocity.fValZ,
+            oEgo.sVelocity.nConf);
+        LOG_INFO("  sAngularRate:       X=%.4f  Y=%.4f  Z=%.4f  conf=%d",
+            oEgo.sAngularRate.fValX,
+            oEgo.sAngularRate.fValY,
+            oEgo.sAngularRate.fValZ,
+            oEgo.sAngularRate.nConf);
+        LOG_INFO("  sAcceleration:      X=%.4f  Y=%.4f  Z=%.4f  conf=%d",
+            oEgo.sAcceleration.fValX,
+            oEgo.sAcceleration.fValY,
+            oEgo.sAcceleration.fValZ,
+            oEgo.sAcceleration.nConf);
+        LOG_INFO("  sPoseUSK0_2D.fValYaw: %.4f rad",
+            oEgo.sPoseUSK0_2D.fValYaw);
+    }
+}
+
 cPacketParserFilter::cPacketParserFilter()
 {
     LOG_INFO("Initializing filter...");
     
     SetDescription("Radar Packed Decoder");
 
-    m_pReader = CreateInputPin("raw_someip");
-    m_pVehDynReader= CreateInputPin("egomotion_input");
+    m_pRadarReader = CreateInputPin("raw_someip");
+    m_pEgoReader= CreateInputPin("egomotion_input");
 
     
     // Outputs — one for udp out + one per decoded message category
@@ -38,16 +81,25 @@ tResult cPacketParserFilter::ProcessInput(
     const adtf::ucom::iobject_ptr
         <const adtf::streaming::ISample>& pSample)
 {   
-    if(pReader == m_pReader) 
+    
+    //Create sample buffer
+    adtf::ucom::object_ptr_shared_locked<const adtf::streaming::ISampleBuffer> pSampleBuffer;
+    RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
+
+    const uint8_t* pData = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
+    const size_t   nLen  = pSampleBuffer->GetSize();
+    const adtf::base::tNanoSeconds tmSample = adtf::streaming::get_sample_time(pSample);
+
+    // ── Egomotion trigger the call --> process Egomotion data ───────────────────
+    if (pReader == m_pEgoReader)
     {
-        // Lock sample buffer
-        adtf::ucom::object_ptr_shared_locked
-        <const adtf::streaming::ISampleBuffer> pSampleBuffer;
-        RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
-
-        const uint8_t* pData = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
-        const size_t   nLen  = pSampleBuffer->GetSize();
-
+        // Egomotion stream — decode and forward to radar
+        return processEgomotion(pData, nLen, tmSample);
+    }
+    
+    // ── Radar reader trigger the call --> process Radar data ───────────────────
+    else if(pReader == m_pRadarReader) 
+    {
         // ── Debug block — remove once validated ----removed for now :-) ─────────────────────────────
         /*
         if (m_nPacketCount < 20)
@@ -95,10 +147,7 @@ tResult cPacketParserFilter::ProcessInput(
         // ── Decode ────────────────────────────────────────────────────────────
         RadarDecoded::DecodedMessage oOutput;
         uint32_t nMessageID = 0;
-        const EValidationResult eResult =
-            RadarDecoder::decode(pData, nLen, oOutput, nMessageID);
-
-
+        const EValidationResult eResult = RadarDecoder::decodeRadar(pData, nLen, oOutput, nMessageID);
         if (eResult != EValidationResult::OK)
         {
             // ERR_UNKNOWN_MESSAGE_ID is expected for SENSORCONFIG (Tx only)
@@ -115,7 +164,6 @@ tResult cPacketParserFilter::ProcessInput(
         }
 
         // ── Dispatch to output pins ───────────────────────────────────────────
-        const adtf::base::tNanoSeconds tmSample = adtf::streaming::get_sample_time(pSample);
 
         const tResult oVisitResult = std::visit(RadarDecoded::overloaded{
 
@@ -149,53 +197,66 @@ tResult cPacketParserFilter::ProcessInput(
 
         RETURN_NOERROR;
     }
-    else if (pReader == m_pVehDynReader)
+}
+
+tResult cPacketParserFilter::processEgomotion(
+    const uint8_t*           pData,
+    size_t                   nLen,
+    adtf::base::tNanoSeconds tmSample)
+{
+    if (!m_bEgoDebugDone)
     {
-        
-        // Lock sample buffer
-        adtf::ucom::object_ptr_shared_locked
-        <const adtf::streaming::ISampleBuffer> pSampleBuffer;
-        RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
+        m_bEgoDebugDone = true;
+        dumpEgomotionPacket(pData, nLen);
+    }
 
-        const uint8_t* pData = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
-        const size_t   nLen  = pSampleBuffer->GetSize();
+    RadarDecoded::tVehicleDynamicsDecoded oVehDyn{};
 
-        RadarTypes::tSOMEIPHeader sVehDynHdr;
-        sVehDynHdr.nServiceID = RadarTypes::SERVICEID_VEHDYN;
-        sVehDynHdr.nMethodID = RadarTypes::METHODID_VEHDYN;
-        sVehDynHdr.nLength = nLen + 8; // Length of packet excluded MessageID and Length
-        sVehDynHdr.nClientID  = 0x4D57;
-        sVehDynHdr.nSessionID = 0x00;
-        sVehDynHdr.nProtocolVersion = 0x01;
-        sVehDynHdr.nInterfaceVersion = 0x01;
-        sVehDynHdr.nMsgType = 0x01; // REQUEST_NO_RETURN 
-        sVehDynHdr.nReturnCode = 0x00; // OK
-
-        const uint8_t nBufSize = nLen + sizeof(sVehDynHdr);
-        uint8_t* pBuf;
-        std::memcpy(pBuf, sVehDynHdr, sizeof(sVehDynHdr));
-
-
-
-        // Allocate sample
-        const adtf::base::tNanoSeconds tmSample = adtf::streaming::get_sample_time(pSample);
-        adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
-        RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
-
-        // Lock, copy, unlock
-        {   
-            
-            adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
-            RETURN_IF_FAILED(pOutSample->WriteLock(pOutBuffer, nBufSize));
-            std::memcpy(pOutBuffer->GetPtr(), pBuf, nBufSize);
+    if (!RadarDecoder::decodeEgomotion(pData, nLen, oVehDyn))
+    {
+        // Log reason here — where LOG_WARNING is available
+        if (nLen < sizeof(EgoMasterIntf_V3::tEgoMaster3DData))
+        {
+            LOG_WARNING("processEgomotion: buffer too short "
+                        "(%zu bytes, need %zu)",
+                nLen,
+                sizeof(EgoMasterIntf_V3::tEgoMaster3DData));
         }
-
-        // Write to VehDyn pin
-        RETURN_IF_FAILED(m_pVehDynWriter->Write(pOutSample));
-        
+        else
+        {
+            LOG_WARNING("processEgomotion: confidence check failed "
+                        "— data not valid or best guess");
+        }
         RETURN_NOERROR;
     }
 
+    LOG_INFO("Egomotion: dir=%u  vel=%.3f m/s  yaw=%.4f rad/s  "
+             "longAcc=%.3f m/s²  latAcc=%.3f m/s²",
+        static_cast<uint8_t>(oVehDyn.eLongDir),
+        oVehDyn.fLongVel,
+        oVehDyn.fYawRate,
+        oVehDyn.fLongAccel,
+        oVehDyn.fLatAccel);
+
+    // Re-encode and forward to radar
+    RadarTypes::tVehicleDynamics_Message oRawMsg{};
+    RadarDecoder::encodeVehicleDynamics(oVehDyn, oRawMsg);
+
+    adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
+    RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
+
+    {
+        adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
+        RETURN_IF_FAILED(pOutSample->WriteLock(
+            pOutBuffer,
+            sizeof(RadarTypes::tVehicleDynamics_Message)));
+        std::memcpy(pOutBuffer->GetPtr(), &oRawMsg,
+            sizeof(RadarTypes::tVehicleDynamics_Message));
+    }
+
+    RETURN_IF_FAILED(m_pVehDynWriter->Write(pOutSample));
+
+    RETURN_NOERROR;
 }
 
 // ── Write helpers ─────────────────────────────────────────────────────────
@@ -240,7 +301,7 @@ tResult cPacketParserFilter::writeRDI(
     adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
     RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
 
-    // Lock, copy, unlock
+    // Lock, copy, unlock -> la graffe vanno tenute, perSmette di fare fare unlock del buffer dopo '}'
     {
         adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
         RETURN_IF_FAILED(pOutSample->WriteLock(pOutBuffer, nBufSize));
@@ -257,17 +318,6 @@ tResult cPacketParserFilter::writeObject(
     const RadarDecoded::tObjectMessage& msg,
     adtf::base::tNanoSeconds            tmSample)
 {
-    // LOG_INFO("OBJ: sensor=%u  objects=%u/%u  cycle=%u  ts=%u  "
-    //          "egoVx=%.2f m/s  egoYaw=%.4f rad/s  status=%u",
-    //     msg.nSensorID,
-    //     msg.nNbOfObjects,
-    //     msg.nArraySize,
-    //     msg.nCycleCounter,
-    //     msg.nTimeStamp,
-    //     msg.fEgoVx,
-    //     msg.fEgoYawRate,
-    //     static_cast<uint8_t>(msg.eSignalStatus));
-
     adtf::streaming::output_sample_data<RadarDecoded::tObjectMessage>
         oOut(tmSample, msg);
     RETURN_IF_FAILED(m_pObjectWriter->Write(oOut.Release()));
@@ -279,14 +329,6 @@ tResult cPacketParserFilter::writeStatus(
     const RadarDecoded::tSensorStatusDecoded& msg,
     adtf::base::tNanoSeconds                  tmSample)
 {
-    LOG_INFO("STATUS: sensor=%u  longPos=%.3f m  latPos=%.3f m  "
-             "yaw=%.4f rad  aln=%u",
-        msg.nSensorID,
-        msg.fCurrentLongPos,
-        msg.fCurrentLatPos,
-        msg.fCurrentYawAngle,
-        msg.nAlnStatus);
-
     adtf::streaming::output_sample_data<RadarDecoded::tSensorStatusDecoded>
         oOut(tmSample, msg);
     RETURN_IF_FAILED(m_pStatusWriter->Write(oOut.Release()));
@@ -294,24 +336,6 @@ tResult cPacketParserFilter::writeStatus(
     RETURN_NOERROR;
 }
 
-tResult cPacketParserFilter::writeVehDyn(
-    const RadarDecoded::tVehicleDynamicsDecoded& msg,
-    adtf::base::tNanoSeconds                     tmSample)
-{
-    // LOG_INFO("VEHDYN: vel=%.2f m/s  yawrate=%.4f rad/s  "
-    //          "longAccel=%.3f m/s^2  latAccel=%.3f m/s^2  dir=%u",
-    //     msg.fLongVel,
-    //     msg.fYawRate,
-    //     msg.fLongAccel,
-    //     msg.fLatAccel,
-    //     static_cast<uint8_t>(msg.eLongDir));
-
-    adtf::streaming::output_sample_data<RadarDecoded::tVehicleDynamicsDecoded>
-        oOut(tmSample, msg);
-    RETURN_IF_FAILED(m_pVehDynWriter->Write(oOut.Release()));
-
-    RETURN_NOERROR;
-}
 
 
 tResult cPacketParserFilter::Init(tInitStage eStage) {

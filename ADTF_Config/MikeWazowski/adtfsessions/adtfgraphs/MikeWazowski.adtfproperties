@@ -17,7 +17,7 @@
           <properties>
             <property>
               <name>filenames</name>
-              <value>/home/adas-ee5/AudiProjects/Assignment1_ADTF_Plugin/beauty-contest-2026-adtf-task/record_20260220_132756.adtfdat</value>
+              <value>/home/user/record_20260220_132756.adtfdat</value>
               <type>cFilenameList</type>
               <link/>
             </property>
@@ -67,10 +67,6 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/sample_streams/Sample Stream</name>
-          <properties/>
-        </property_set>
-        <property_set>
           <name>graphs/playback/sample_streams/Sample Stream_2</name>
           <properties/>
         </property_set>
@@ -91,7 +87,35 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_Sample Stream.</name>
+          <name>graphs/playback/sample_streams/Sample Stream</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Player.egomotion_Sample Stream.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/Sample Stream_1</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Sample Stream._Sample Stream_1.</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/Sample Stream_1._UDP Radar Decoder.egomotion_input</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/filters/UDP Radar Decoder/input_pins/egomotion_input</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/sample_streams/UDP Radar Decoder.udp_out</name>
+          <properties/>
+        </property_set>
+        <property_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_UDP Radar Decoder.udp_out.</name>
           <properties/>
         </property_set>
         <property_set>
@@ -99,7 +123,7 @@
           <properties/>
         </property_set>
         <property_set>
-          <name>graphs/playback/connections/Sample Stream._UDP Sender To Non ADTF Application.input</name>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
           <properties/>
         </property_set>
       </property_sets>

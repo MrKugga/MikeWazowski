@@ -173,9 +173,9 @@ static RadarDecoded::tObjectMessage decodeObjectMessage(
     return o;
 }
 
-// ── Main decode ───────────────────────────────────────────────────────────
+// ── Radar UDP decode ───────────────────────────────────────────────────────────
 
-EValidationResult decode(
+EValidationResult decodeRadar(
     const uint8_t*                pData,
     size_t                        nLen,
     RadarDecoded::DecodedMessage& oOutput,
@@ -306,6 +306,82 @@ EValidationResult decode(
         }
     }
     return EValidationResult::OK;
+}
+
+
+// ── Egomotion decode ───────────────────────────────────────────────────────────
+
+bool decodeEgomotion(
+    const uint8_t*                         pData,
+    size_t                                 nLen,
+    RadarDecoded::tVehicleDynamicsDecoded& oOutput)
+{
+    // Buffer too short
+    if (nLen < sizeof(EgoMasterIntf_V3::tEgoMaster3DData))
+        return false;
+
+    EgoMasterIntf_V3::tEgoMaster3DData oEgo{};
+    std::memcpy(&oEgo, pData, sizeof(EgoMasterIntf_V3::tEgoMaster3DData));
+
+    // Check confidence — reject if data is unreliable
+    if (oEgo.sVelocity.nConf     > EgoMasterIntf_V3::EM_CONF_BESTGUESS ||
+        oEgo.sAngularRate.nConf  > EgoMasterIntf_V3::EM_CONF_BESTGUESS ||
+        oEgo.sAcceleration.nConf > EgoMasterIntf_V3::EM_CONF_BESTGUESS)
+        return false;
+
+    // Map EgoMaster → tVehicleDynamicsDecoded
+    const float fLongVel = oEgo.sVelocity.fValX;
+
+    oOutput.eLongDir   = (fLongVel >= 0.0f)
+        ? RadarTypes::tEgoLongDir::EGOLONGDIR_FORWARD
+        : RadarTypes::tEgoLongDir::EGOLONGDIR_BACKWARD;
+
+    oOutput.fLongVel   = std::abs(fLongVel);
+    oOutput.fYawRate   = oEgo.sAngularRate.fValZ;
+    oOutput.fLongAccel = oEgo.sAcceleration.fValX;
+    oOutput.fLatAccel  = oEgo.sAcceleration.fValY;
+
+    return true;
+}
+
+bool encodeVehicleDynamics(
+    const RadarDecoded::tVehicleDynamicsDecoded& oEgo,
+    RadarTypes::tVehicleDynamics_Message&         oMsg)
+{
+    // Payload header
+    oMsg.sHeader.nCRC = 0x0000;
+    oMsg.sHeader.nLen =
+        static_cast<uint16_t>(
+            sizeof(RadarTypes::tVehicleDynamics_Message)
+            - sizeof(uint16_t));
+    oMsg.sHeader.nSQC = 0;
+
+    // Direction — uint8_t enum, no swap needed
+    oMsg.eLongDir = oEgo.eLongDir;
+
+    // fLongVel is uint16_t in the raw struct — no sign
+    oMsg.fLongVel = 
+        static_cast<uint16_t>(
+            oEgo.fLongVel
+            / static_cast<float>(RadarTypes::RES_F_LONGVEL));
+
+    // fYawRate, fLongAccel, fLatAccel are int16_t — signed
+    oMsg.fYawRate = 
+        static_cast<int16_t>(
+            oEgo.fYawRate
+            / static_cast<float>(RadarTypes::RES_F_YAWRATE));
+
+    oMsg.fLongAccel =
+        static_cast<int16_t>(
+            oEgo.fLongAccel
+            / static_cast<float>(RadarTypes::RES_F_LONGACCEL));
+
+    oMsg.fLatAccel = 
+        static_cast<int16_t>(
+            oEgo.fLatAccel
+            / static_cast<float>(RadarTypes::RES_F_LATACCEL));
+
+    return true;
 }
 
 } // namespace RadarDecoder

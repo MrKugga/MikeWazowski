@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cstddef>  // size_t
 
-// Magic number to validate packet integrity: "RDR\0"
+// Magic number to validate packet integrity"
 static constexpr uint32_t RADAR_UDP_MAGIC = 0x41756469;
 
 // One detection point on the wire
@@ -37,4 +37,4 @@ static constexpr uint16_t MAX_FAR_DETECTIONS  =  76;  // 38+38
 static constexpr size_t MAX_UDP_PAYLOAD =
     sizeof(tUDPRadarHeader) +
     (MAX_NEAR_DETECTIONS + MAX_FAR_DETECTIONS) * sizeof(tUDPRadarPoint);
-// = 16 + 184 * 25 = 4616 bytes — well within UDP limit
+// = 16 + 184 * 25 = 4616 bytes

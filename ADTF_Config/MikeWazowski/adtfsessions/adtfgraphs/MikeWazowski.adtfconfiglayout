@@ -35,7 +35,7 @@
             <width>0</width>
             <height>0</height>
           </boundary>
-          <selected>false</selected>
+          <selected>true</selected>
           <connection_layout>
             <name/>
             <centerLineIsManual>false</centerLineIsManual>
@@ -54,7 +54,7 @@
             <width>0</width>
             <height>0</height>
           </boundary>
-          <selected>false</selected>
+          <selected>true</selected>
           <connection_layout>
             <name/>
             <centerLineIsManual>false</centerLineIsManual>
@@ -87,27 +87,8 @@
         <layout_set>
           <name>graphs/playback/filters/UDP Sender To Non ADTF Application</name>
           <boundary>
-            <x>990</x>
-            <y>410</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/playback/sample_streams/Sample Stream</name>
-          <boundary>
-            <x>867</x>
-            <y>459</y>
+            <x>883</x>
+            <y>386</y>
             <width>0</width>
             <height>0</height>
           </boundary>
@@ -125,8 +106,8 @@
         <layout_set>
           <name>graphs/playback/sample_streams/Sample Stream_2</name>
           <boundary>
-            <x>348</x>
-            <y>452</y>
+            <x>350</x>
+            <y>444</y>
             <width>0</width>
             <height>0</height>
           </boundary>
@@ -163,8 +144,8 @@
         <layout_set>
           <name>graphs/playback/filters/UDP Radar Decoder</name>
           <boundary>
-            <x>468</x>
-            <y>301</y>
+            <x>507</x>
+            <y>388</y>
             <width>0</width>
             <height>0</height>
           </boundary>
@@ -199,7 +180,26 @@
           </connection_layout>
         </layout_set>
         <layout_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_Sample Stream.</name>
+          <name>graphs/playback/sample_streams/Sample Stream</name>
+          <boundary>
+            <x>367</x>
+            <y>519</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>true</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/connections/Player.egomotion_Sample Stream.</name>
           <boundary>
             <x>0</x>
             <y>0</y>
@@ -218,7 +218,102 @@
           </connection_layout>
         </layout_set>
         <layout_set>
-          <name>graphs/playback/connections/Sample Stream._UDP Sender To Non ADTF Application.input</name>
+          <name>graphs/playback/sample_streams/Sample Stream_1</name>
+          <boundary>
+            <x>350</x>
+            <y>498</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>false</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/connections/Sample Stream._Sample Stream_1.</name>
+          <boundary>
+            <x>0</x>
+            <y>0</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>false</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/connections/Sample Stream_1._UDP Radar Decoder.egomotion_input</name>
+          <boundary>
+            <x>0</x>
+            <y>0</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>false</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/sample_streams/UDP Radar Decoder.udp_out</name>
+          <boundary>
+            <x>783</x>
+            <y>472</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>false</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out_UDP Radar Decoder.udp_out.</name>
+          <boundary>
+            <x>0</x>
+            <y>0</y>
+            <width>0</width>
+            <height>0</height>
+          </boundary>
+          <selected>false</selected>
+          <connection_layout>
+            <name/>
+            <centerLineIsManual>false</centerLineIsManual>
+            <centerLineAbsX>0</centerLineAbsX>
+            <centerLineAbsY>0</centerLineAbsY>
+            <centerLineStraight>false</centerLineStraight>
+            <centerLineHorzIsManual>false</centerLineHorzIsManual>
+            <centerLineVertIsManual>false</centerLineVertIsManual>
+          </connection_layout>
+        </layout_set>
+        <layout_set>
+          <name>graphs/playback/connections/UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
           <boundary>
             <x>0</x>
             <y>0</y>

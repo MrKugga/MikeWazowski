@@ -1,6 +1,7 @@
 #pragma once
 #include <adtffiltersdk/adtf_filtersdk.h>
 #include "../assignment/RadarTypes.h"
+#include "../assignment/EgoMaster3DOutput.h"
 #include "validator.h"
 #include "decoded_messages.h"
 #include "decoder.h"
@@ -45,8 +46,8 @@ private:
     //adtf::streaming::ISampleWriter* m_pWriter = nullptr; // Anonymous out (SOME/IP Payload) --> old implementation
 
     // ── Input ─────────────────────────────────────────────────────────────
-    adtf::streaming::ISampleReader* m_pReader = nullptr;
-    adtf::streaming::ISampleReader* m_pVehDynReader = nullptr;
+    adtf::streaming::ISampleReader* m_pRadarReader = nullptr;
+    adtf::streaming::ISampleReader* m_pEgoReader = nullptr;
 
     // ── Outputs — one UDP stream + one pin per decoded message type ────────────────────────
     adtf::streaming::ISampleWriter* m_pUDPWriter = nullptr;
@@ -58,9 +59,15 @@ private:
     // ── Cycle accumulator ─────────────────────────────────────────────────
     RadarDecoder::cCycleAccumulator m_oAccumulator;
 
+    // ── Util function to process egomotion data ─────────────────────────────────────────────────
+    tResult processEgomotion(const uint8_t*           pData,
+                             size_t                   nLen,
+                             adtf::base::tNanoSeconds tmSample); 
+
     // ── Debug state ───────────────────────────────────────────────────────
     uint32_t m_nPacketCount  = 0;
     bool     m_bDebugDone    = false;
+    bool     m_bEgoDebugDone = false;
 
     // ── Internal write helpers ────────────────────────────────────────────
 
@@ -71,9 +78,12 @@ private:
                             adtf::base::tNanoSeconds                      tmSample);
     tResult writeStatus    (const RadarDecoded::tSensorStatusDecoded&     msg,
                             adtf::base::tNanoSeconds                      tmSample);
+  
+    /* replace by processEgomotion that writes on m_pVehDynWriter 
     tResult writeVehDyn    (const RadarDecoded::tVehicleDynamicsDecoded&  msg,
-                            adtf::base::tNanoSeconds                      tmSample);
-
+                            adtf::base::tNanoSeconds                      tmSample); 
+    */
+ 
     // Properties
     adtf::base::property_variable<uint16_t> m_nExpectedServiceId{0x0000};
     adtf::base::property_variable<uint16_t> m_nExpectedMethodId {0xFFFF};

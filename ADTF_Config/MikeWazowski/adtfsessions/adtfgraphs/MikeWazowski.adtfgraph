@@ -49,6 +49,9 @@
             <pin>
               <name>raw_someip</name>
             </pin>
+            <pin>
+              <name>egomotion_input</name>
+            </pin>
           </input_pins>
           <output_pins>
             <pin>
@@ -78,12 +81,22 @@
           <deactivated>false</deactivated>
         </sample_stream>
         <sample_stream>
+          <name>Sample Stream_2</name>
+          <class_id>sample_stream.streaming.adtf.cid</class_id>
+          <deactivated>false</deactivated>
+        </sample_stream>
+        <sample_stream>
           <name>Sample Stream</name>
           <class_id>sample_stream.streaming.adtf.cid</class_id>
           <deactivated>false</deactivated>
         </sample_stream>
         <sample_stream>
-          <name>Sample Stream_2</name>
+          <name>Sample Stream_1</name>
+          <class_id>sample_stream.streaming.adtf.cid</class_id>
+          <deactivated>false</deactivated>
+        </sample_stream>
+        <sample_stream>
+          <name>UDP Radar Decoder.udp_out</name>
           <class_id>sample_stream.streaming.adtf.cid</class_id>
           <deactivated>false</deactivated>
         </sample_stream>
@@ -140,10 +153,10 @@
           <sync>true</sync>
         </connection>
         <connection>
-          <name>UDP Radar Decoder.udp_out_Sample Stream.</name>
+          <name>Player.egomotion_Sample Stream.</name>
           <source_connector_path>
-            <connector>udp_out</connector>
-            <component>UDP Radar Decoder</component>
+            <connector>egomotion</connector>
+            <component>Player</component>
             <portbindingobject/>
           </source_connector_path>
           <destination_connector_path>
@@ -156,10 +169,58 @@
           <sync>true</sync>
         </connection>
         <connection>
-          <name>Sample Stream._UDP Sender To Non ADTF Application.input</name>
+          <name>Sample Stream._Sample Stream_1.</name>
           <source_connector_path>
             <connector/>
             <component>Sample Stream</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector/>
+            <component>Sample Stream_1</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>Sample Stream_1._UDP Radar Decoder.egomotion_input</name>
+          <source_connector_path>
+            <connector/>
+            <component>Sample Stream_1</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>egomotion_input</connector>
+            <component>UDP Radar Decoder</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>UDP Radar Decoder.udp_out_UDP Radar Decoder.udp_out.</name>
+          <source_connector_path>
+            <connector>udp_out</connector>
+            <component>UDP Radar Decoder</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector/>
+            <component>UDP Radar Decoder.udp_out</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
+          <source_connector_path>
+            <connector/>
+            <component>UDP Radar Decoder.udp_out</component>
             <portbindingobject/>
           </source_connector_path>
           <destination_connector_path>

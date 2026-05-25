@@ -129,6 +129,7 @@ struct tVehicleDynamicsDecoded
     float fLatAccel;    // [m/s^2]
 };
 
+
 // ── Variant ──────────────────────────────────────────────────────────────
 
 /*
@@ -158,7 +159,7 @@ template<typename... Ts>
 struct overloaded : Ts... { using Ts::operator()...; };
 
 /*
-Deduction guide --> neede by the compiler. Maybe not needed for C++20??? We
+Deduction guide --> neede by the compiler. Maybe not needed for C++20??? 
 */
 template<typename... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
