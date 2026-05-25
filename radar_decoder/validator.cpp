@@ -56,8 +56,10 @@ EValidationResult validateSOMEIPPacket(
     // 2 Parse service ID and method ID (big-endian)
     uint16_t nServiceID = 0;
     uint16_t nMethodID  = 0;
+
     std::memcpy(&nServiceID, pData + 0, sizeof(uint16_t));
     std::memcpy(&nMethodID,  pData + 2, sizeof(uint16_t));
+
     nServiceID = __builtin_bswap16(nServiceID);
     nMethodID  = __builtin_bswap16(nMethodID);
 

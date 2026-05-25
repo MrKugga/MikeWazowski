@@ -152,6 +152,47 @@ tResult cPacketParserFilter::ProcessInput(
     else if (pReader == m_pVehDynReader)
     {
         
+        // Lock sample buffer
+        adtf::ucom::object_ptr_shared_locked
+        <const adtf::streaming::ISampleBuffer> pSampleBuffer;
+        RETURN_IF_FAILED(pSample->Lock(pSampleBuffer));
+
+        const uint8_t* pData = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
+        const size_t   nLen  = pSampleBuffer->GetSize();
+
+        RadarTypes::tSOMEIPHeader sVehDynHdr;
+        sVehDynHdr.nServiceID = RadarTypes::SERVICEID_VEHDYN;
+        sVehDynHdr.nMethodID = RadarTypes::METHODID_VEHDYN;
+        sVehDynHdr.nLength = nLen + 8; // Length of packet excluded MessageID and Length
+        sVehDynHdr.nClientID  = 0x4D57;
+        sVehDynHdr.nSessionID = 0x00;
+        sVehDynHdr.nProtocolVersion = 0x01;
+        sVehDynHdr.nInterfaceVersion = 0x01;
+        sVehDynHdr.nMsgType = 0x01; // REQUEST_NO_RETURN 
+        sVehDynHdr.nReturnCode = 0x00; // OK
+
+        const uint8_t nBufSize = nLen + sizeof(sVehDynHdr);
+        uint8_t* pBuf;
+        std::memcpy(pBuf, sVehDynHdr, sizeof(sVehDynHdr));
+
+
+
+        // Allocate sample
+        const adtf::base::tNanoSeconds tmSample = adtf::streaming::get_sample_time(pSample);
+        adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
+        RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
+
+        // Lock, copy, unlock
+        {   
+            
+            adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
+            RETURN_IF_FAILED(pOutSample->WriteLock(pOutBuffer, nBufSize));
+            std::memcpy(pOutBuffer->GetPtr(), pBuf, nBufSize);
+        }
+
+        // Write to VehDyn pin
+        RETURN_IF_FAILED(m_pVehDynWriter->Write(pOutSample));
+        
         RETURN_NOERROR;
     }
 
