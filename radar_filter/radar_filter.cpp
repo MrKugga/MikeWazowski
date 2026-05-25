@@ -29,8 +29,6 @@ cPacketParserFilter::cPacketParserFilter()
         adtf::streaming::stream_type
             <adtf::streaming::stream_meta_type_anonymous>());
 
-
-
     SetDescription("Parses raw SOME/IP packets and decodes radar messages.");
 }
 
@@ -50,7 +48,8 @@ tResult cPacketParserFilter::ProcessInput(
         const uint8_t* pData = static_cast<const uint8_t*>(pSampleBuffer->GetPtr());
         const size_t   nLen  = pSampleBuffer->GetSize();
 
-        // ── Debug block — remove once validated ──────────────────────────────
+        // ── Debug block — remove once validated ----removed for now :-) ─────────────────────────────
+        /*
         if (m_nPacketCount < 20)
         {
             CRCUtils::checkCRCAcrossPackets(
@@ -90,6 +89,7 @@ tResult cPacketParserFilter::ProcessInput(
             }
         }
         m_nPacketCount++;
+        */
         // ── End debug block ───────────────────────────────────────────────────
 
         // ── Decode ────────────────────────────────────────────────────────────
@@ -121,49 +121,7 @@ tResult cPacketParserFilter::ProcessInput(
 
             [&](const RadarDecoded::tRDIMessage& msg) -> tResult
             {
-                // LOG_INFO("[pkt %u] %s → RDI sensor=%u det=%u cycle=%u",
-                //     m_nPacketCount,
-                //     PacketValidator::messageIDToString(nMessageID),
-                //     msg.nSensorID,
-                //     msg.nNbOfDetections,
-                //     msg.nCycleCounter);
-
-                // Feed into cycle accumulator
-                const bool bCycleComplete =
-                    m_oAccumulator.addMessage(msg, nMessageID);
-
-                if (bCycleComplete)
-                {
-                    const size_t nBufSize = m_oAccumulator.getSendBufferSize();
-
-                    // Guard — must never be zero
-                    if (nBufSize == 0)
-                    {
-                        LOG_ERROR("Cycle complete but buffer size is 0 — skipping");
-                        RETURN_NOERROR;  // ← bug 1 fix: always return
-                    }
-
-                    LOG_INFO("Cycle %u complete — near=%u far=%u  buf=%zu bytes",
-                        m_oAccumulator.getCurrentCycle(),
-                        m_oAccumulator.getNearCount(),
-                        m_oAccumulator.getFarCount(),
-                        nBufSize);
-
-                    const uint8_t* pBuf = m_oAccumulator.getSendBuffer();
-
-                    adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
-                    RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
-
-                    {
-                        adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
-                        RETURN_IF_FAILED(pOutSample->WriteLock(pOutBuffer, nBufSize));
-                        std::memcpy(pOutBuffer->GetPtr(), pBuf, nBufSize);
-                    }
-
-                    RETURN_IF_FAILED(m_pUDPWriter->Write(pOutSample));
-                }
-
-                RETURN_NOERROR;
+                return writeRDI(msg, nMessageID, tmSample);
             },
 
             [&](const RadarDecoded::tObjectMessage& msg) -> tResult {
@@ -200,15 +158,56 @@ tResult cPacketParserFilter::ProcessInput(
 }
 
 // ── Write helpers ─────────────────────────────────────────────────────────
-
 tResult cPacketParserFilter::writeRDI(
     const RadarDecoded::tRDIMessage& msg,
+    uint32_t                         nMessageID,
     adtf::base::tNanoSeconds         tmSample)
 {
-
+    // ── Forward raw decoded struct to ADTF stream pin ─────────────────────
+    // Downstream ADTF filters can connect to this pin
     adtf::streaming::output_sample_data<RadarDecoded::tRDIMessage>
         oOut(tmSample, msg);
     RETURN_IF_FAILED(m_pRDIWriter->Write(oOut.Release()));
+
+    // ── Feed into cycle accumulator ───────────────────────────────────────
+    // Accumulates RDINEAR_0/1/2 and RDIFAR_0/1 separately
+    // Returns true when a complete near OR far group is ready
+    const bool bCycleComplete =
+        m_oAccumulator.addMessage(msg, nMessageID);
+
+    if (!bCycleComplete)
+        RETURN_NOERROR;
+
+    // ── Cycle complete — send via UDP ─────────────────────────────────────
+    const size_t nBufSize = m_oAccumulator.getSendBufferSize();
+
+    if (nBufSize == 0)
+    {
+        LOG_ERROR("writeRDI: cycle complete but buffer size is 0 — skipping");
+        RETURN_NOERROR;
+    }
+
+    LOG_INFO("writeRDI: cycle %u complete — near=%u far=%u  buf=%zu bytes",
+        m_oAccumulator.getCurrentCycle(),
+        m_oAccumulator.getNearCount(),
+        m_oAccumulator.getFarCount(),
+        nBufSize);
+
+    const uint8_t* pBuf = m_oAccumulator.getSendBuffer();
+
+    // Allocate sample
+    adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
+    RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
+
+    // Lock, copy, unlock
+    {
+        adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
+        RETURN_IF_FAILED(pOutSample->WriteLock(pOutBuffer, nBufSize));
+        std::memcpy(pOutBuffer->GetPtr(), pBuf, nBufSize);
+    }
+
+    // Write to UDP output pin (UDPSinkToNonADTFApplication=
+    RETURN_IF_FAILED(m_pUDPWriter->Write(pOutSample));
 
     RETURN_NOERROR;
 }

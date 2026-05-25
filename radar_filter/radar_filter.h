@@ -54,8 +54,6 @@ private:
     adtf::streaming::ISampleWriter* m_pObjectWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pStatusWriter     = nullptr;
     adtf::streaming::ISampleWriter* m_pVehDynWriter     = nullptr;
-    
-
 
     // ── Cycle accumulator ─────────────────────────────────────────────────
     RadarDecoder::cCycleAccumulator m_oAccumulator;
@@ -65,8 +63,9 @@ private:
     bool     m_bDebugDone    = false;
 
     // ── Internal write helpers ────────────────────────────────────────────
-    
+
     tResult writeRDI       (const RadarDecoded::tRDIMessage&              msg,
+                            uint32_t                                      nMessageID,
                             adtf::base::tNanoSeconds                      tmSample);
     tResult writeObject    (const RadarDecoded::tObjectMessage&           msg,
                             adtf::base::tNanoSeconds                      tmSample);
