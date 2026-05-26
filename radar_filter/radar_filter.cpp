@@ -240,7 +240,8 @@ tResult cPacketParserFilter::processEgomotion(
 
     // Re-encode and forward to radar
     RadarTypes::tVehicleDynamics_Message oRawMsg{};
-    RadarDecoder::encodeVehicleDynamics(oVehDyn, oRawMsg);
+    RadarTypes::tSOMEIPHeader oSOMEIPHeader{};
+    RadarDecoder::encodeVehicleDynamics(oVehDyn, oRawMsg, oSOMEIPHeader);
 
     adtf::ucom::object_ptr<adtf::streaming::ISample> pOutSample;
     RETURN_IF_FAILED(adtf::streaming::alloc_sample(pOutSample, tmSample));
@@ -249,9 +250,15 @@ tResult cPacketParserFilter::processEgomotion(
         adtf::ucom::object_ptr_locked<adtf::streaming::ISampleBuffer> pOutBuffer;
         RETURN_IF_FAILED(pOutSample->WriteLock(
             pOutBuffer,
-            sizeof(RadarTypes::tVehicleDynamics_Message)));
-        std::memcpy(pOutBuffer->GetPtr(), &oRawMsg,
-            sizeof(RadarTypes::tVehicleDynamics_Message));
+            sizeof(RadarTypes::tVehicleDynamics_Message)+sizeof(RadarTypes::tSOMEIPHeader)));
+            
+            std::memcpy(pOutBuffer->GetPtr(), &oSOMEIPHeader,
+                sizeof(RadarTypes::tSOMEIPHeader));
+
+            std::memcpy(pOutBuffer->GetPtr() + sizeof(RadarTypes::tSOMEIPHeader), &oRawMsg,
+                sizeof(RadarTypes::tVehicleDynamics_Message));
+
+            LOG_INFO("Packet size: %zu", pOutBuffer->GetSize());
     }
 
     RETURN_IF_FAILED(m_pVehDynWriter->Write(pOutSample));

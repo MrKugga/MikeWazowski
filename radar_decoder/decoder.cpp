@@ -345,11 +345,13 @@ bool decodeEgomotion(
 }
 
 bool encodeVehicleDynamics(
-    const RadarDecoded::tVehicleDynamicsDecoded& oEgo,
-    RadarTypes::tVehicleDynamics_Message&         oMsg)
-{
+    const RadarDecoded::tVehicleDynamicsDecoded&  oEgo,
+    RadarTypes::tVehicleDynamics_Message&         oMsg,
+    RadarTypes::tSOMEIPHeader&                    oSOMEIPHeader)
+{   
+
     // Payload header
-    oMsg.sHeader.nCRC = 0x0000;
+    oMsg.sHeader.nCRC = 0x0000; // CRC algorithm tbd
     oMsg.sHeader.nLen =
         static_cast<uint16_t>(
             sizeof(RadarTypes::tVehicleDynamics_Message)
@@ -380,6 +382,18 @@ bool encodeVehicleDynamics(
         static_cast<int16_t>(
             oEgo.fLatAccel
             / static_cast<float>(RadarTypes::RES_F_LATACCEL));
+
+    // SOME/IP Header
+
+    oSOMEIPHeader.nServiceID = RadarTypes::SERVICEID_VEHDYN;
+    oSOMEIPHeader.nMethodID = RadarTypes::METHODID_VEHDYN;
+    oSOMEIPHeader.nLength = sizeof(oMsg) + sizeof(oSOMEIPHeader) - 8; // nLenght does not cover first 8 bytes of SOMEIP Header 
+    oSOMEIPHeader.nClientID = 0x4d57;
+    oSOMEIPHeader.nSessionID = 0x0001;
+    oSOMEIPHeader.nProtocolVersion = 0x01;
+    oSOMEIPHeader.nInterfaceVersion = 0x01;
+    oSOMEIPHeader.nMsgType = 0x01; // Fire&Forget
+    oSOMEIPHeader.nReturnCode = 0x00; // E_OK
 
     return true;
 }

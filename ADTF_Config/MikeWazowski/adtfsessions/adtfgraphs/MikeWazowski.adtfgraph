@@ -57,7 +57,25 @@
             <pin>
               <name>udp_out</name>
             </pin>
+            <pin>
+              <name>vehicle_dynamics</name>
+            </pin>
           </output_pins>
+          <runners/>
+          <init_priority>0</init_priority>
+          <deactivated>false</deactivated>
+          <binding_servers/>
+          <binding_clients/>
+        </filter>
+        <filter>
+          <name>Qt5 Stream Display</name>
+          <class_id>stream_display.ui_filter.adtf.cid</class_id>
+          <input_pins>
+            <pin>
+              <name>vehicle_dynamics</name>
+            </pin>
+          </input_pins>
+          <output_pins/>
           <runners/>
           <init_priority>0</init_priority>
           <deactivated>false</deactivated>
@@ -97,6 +115,11 @@
         </sample_stream>
         <sample_stream>
           <name>UDP Radar Decoder.udp_out</name>
+          <class_id>sample_stream.streaming.adtf.cid</class_id>
+          <deactivated>false</deactivated>
+        </sample_stream>
+        <sample_stream>
+          <name>UDP Radar Decoder.vehicle_dynamics</name>
           <class_id>sample_stream.streaming.adtf.cid</class_id>
           <deactivated>false</deactivated>
         </sample_stream>
@@ -217,6 +240,22 @@
           <sync>true</sync>
         </connection>
         <connection>
+          <name>UDP Radar Decoder.vehicle_dynamics_UDP Radar Decoder.vehicle_dynamics.</name>
+          <source_connector_path>
+            <connector>vehicle_dynamics</connector>
+            <component>UDP Radar Decoder</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector/>
+            <component>UDP Radar Decoder.vehicle_dynamics</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
           <name>UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
           <source_connector_path>
             <connector/>
@@ -226,6 +265,22 @@
           <destination_connector_path>
             <connector>input</connector>
             <component>UDP Sender To Non ADTF Application</component>
+            <portbindingobject/>
+          </destination_connector_path>
+          <priority>0</priority>
+          <deactivated>false</deactivated>
+          <sync>true</sync>
+        </connection>
+        <connection>
+          <name>UDP Radar Decoder.vehicle_dynamics._Qt5 Stream Display.vehicle_dynamics</name>
+          <source_connector_path>
+            <connector/>
+            <component>UDP Radar Decoder.vehicle_dynamics</component>
+            <portbindingobject/>
+          </source_connector_path>
+          <destination_connector_path>
+            <connector>vehicle_dynamics</connector>
+            <component>Qt5 Stream Display</component>
             <portbindingobject/>
           </destination_connector_path>
           <priority>0</priority>

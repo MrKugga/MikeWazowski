@@ -24,8 +24,9 @@ bool decodeEgomotion(
     RadarDecoded::tVehicleDynamicsDecoded& oOutput);
 
 bool encodeVehicleDynamics(
-    const RadarDecoded::tVehicleDynamicsDecoded& oEgo,
-    RadarTypes::tVehicleDynamics_Message&         oMsg);
+    const RadarDecoded::tVehicleDynamicsDecoded&  oEgo,
+    RadarTypes::tVehicleDynamics_Message&         oMsg,
+    RadarTypes::tSOMEIPHeader&                    oSOMEIPHeader);
 
 } // namespace RadarDecoder
 

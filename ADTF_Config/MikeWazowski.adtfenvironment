@@ -11,16 +11,7 @@
   <environment_directory_macro>ADTF_FASVE_DIR</environment_directory_macro>
   <includes>
     <include>
-      <url>/home/user/ADTF/adtf/adtf.adtfenvironment</url>
-    </include>
-    <include>
-      <url>/home/user/ADTF/adtf_qt5/adtf_qt5.adtfenvironment</url>
-    </include>
-    <include>
-      <url>/home/user/ADTF/adtf_display_toolbox/adtf_display_toolbox.adtfenvironment</url>
-    </include>
-    <include>
-      <url>/home/user/ADTF/adtf_device_toolbox/adtf_device_toolbox.adtfenvironment</url>
+      <url>/home/adas-ee5/Desktop/ADTF/adtf/adtf.adtfenvironment</url>
     </include>
   </includes>
   <macros/>
