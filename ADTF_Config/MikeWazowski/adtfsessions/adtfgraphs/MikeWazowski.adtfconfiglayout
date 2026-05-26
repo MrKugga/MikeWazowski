@@ -35,7 +35,7 @@
             <width>0</width>
             <height>0</height>
           </boundary>
-          <selected>false</selected>
+          <selected>true</selected>
           <connection_layout>
             <name/>
             <centerLineIsManual>false</centerLineIsManual>
@@ -54,7 +54,7 @@
             <width>0</width>
             <height>0</height>
           </boundary>
-          <selected>false</selected>
+          <selected>true</selected>
           <connection_layout>
             <name/>
             <centerLineIsManual>false</centerLineIsManual>
@@ -187,7 +187,7 @@
             <width>0</width>
             <height>0</height>
           </boundary>
-          <selected>false</selected>
+          <selected>true</selected>
           <connection_layout>
             <name/>
             <centerLineIsManual>false</centerLineIsManual>
@@ -313,83 +313,7 @@
           </connection_layout>
         </layout_set>
         <layout_set>
-          <name>graphs/playback/sample_streams/UDP Radar Decoder.vehicle_dynamics</name>
-          <boundary>
-            <x>753</x>
-            <y>552</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.vehicle_dynamics_UDP Radar Decoder.vehicle_dynamics.</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
           <name>graphs/playback/connections/UDP Radar Decoder.udp_out._UDP Sender To Non ADTF Application.input</name>
-          <boundary>
-            <x>0</x>
-            <y>0</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/playback/filters/Qt5 Stream Display</name>
-          <boundary>
-            <x>769</x>
-            <y>92</y>
-            <width>0</width>
-            <height>0</height>
-          </boundary>
-          <selected>false</selected>
-          <connection_layout>
-            <name/>
-            <centerLineIsManual>false</centerLineIsManual>
-            <centerLineAbsX>0</centerLineAbsX>
-            <centerLineAbsY>0</centerLineAbsY>
-            <centerLineStraight>false</centerLineStraight>
-            <centerLineHorzIsManual>false</centerLineHorzIsManual>
-            <centerLineVertIsManual>false</centerLineVertIsManual>
-          </connection_layout>
-        </layout_set>
-        <layout_set>
-          <name>graphs/playback/connections/UDP Radar Decoder.vehicle_dynamics._Qt5 Stream Display.vehicle_dynamics</name>
           <boundary>
             <x>0</x>
             <y>0</y>
