@@ -35,12 +35,6 @@ public:
         adtf::streaming::ISampleReader* pReader,
         const   adtf::ucom::iobject_ptr<const adtf::streaming::ISample>& pSample) override;
     
-    // lifecycle
-    tResult Init(tInitStage eStage) override;
-    // tResult Start() override;
-    // tResult Stop() override;
-    tResult Shutdown(tInitStage eStage) override;
-
 
 private:
     //adtf::streaming::ISampleWriter* m_pWriter = nullptr; // Anonymous out (SOME/IP Payload) --> old implementation

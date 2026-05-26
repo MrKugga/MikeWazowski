@@ -343,17 +343,3 @@ tResult cPacketParserFilter::writeStatus(
     RETURN_NOERROR;
 }
 
-
-
-tResult cPacketParserFilter::Init(tInitStage eStage) {
-
-    LOG_INFO("Initialising UDP Decoder");
-    RETURN_NOERROR;
-}
-
-
-tResult cPacketParserFilter::Shutdown(tInitStage eStage) {
-
-    LOG_INFO("Shutting down UDP Decoder");
-    RETURN_NOERROR;
-}

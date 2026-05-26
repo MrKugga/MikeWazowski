@@ -1,6 +1,39 @@
+# Build output
 build/
-assignment/
 install/
-debug/
-log/
+
+# Avoid tracking assignment files
+assignment/
+
+# Don't track enviornemntal variables
+setEnvVariables.sh
+
+# ADTF machine-specific config
 ADTF_Config/
+
+# ROS2 build artifacts
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# ADTF plugin binaries
+*.adtfplugin
+*.plugindescription
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
