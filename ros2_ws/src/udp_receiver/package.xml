@@ -4,7 +4,7 @@
   <name>udp_receiver</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="stefavitra@gmail.com">adas-ee5</maintainer>
+  <maintainer email="stefavitra@gmail.com">Stefano</maintainer>
   <license>Apache-2.0</license>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>

@@ -13,7 +13,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='adas-ee5',
+    maintainer='Stefano',
     maintainer_email='stefavitra@gmail.com',
     description='TODO: Package description',
     license='Apache-2.0',
