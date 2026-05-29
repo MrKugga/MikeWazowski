@@ -5,9 +5,6 @@ install/
 # Avoid tracking assignment files
 assignment/
 
-# Don't track enviornemntal variables
-setEnvVariables.sh
-
 # ADTF machine-specific config
 ADTF_Config/
 
@@ -22,7 +19,7 @@ CMakeFiles/
 cmake_install.cmake
 Makefile
 
-# ADTF plugin binaries
+# ADTF binaries
 *.adtfplugin
 *.plugindescription
 
